@@ -3,6 +3,9 @@ package ua.com.elius.familycart;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +43,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_to_buy);
+
+        if (savedInstanceState == null) {
+            switchFragment(ToBuyListFragment.newInstance());
+        }
     }
 
     @Override
@@ -80,20 +88,30 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
         if (id == R.id.nav_to_buy) {
-            // Handle the camera action
+            switchFragment(ToBuyListFragment.newInstance());
         } else if (id == R.id.nav_wont_buy) {
-
+            switchFragment(WontBuyListFragment.newInstance());
         } else if (id == R.id.nav_bought) {
-
+            switchFragment(BoughtListFragment.newInstance());
         } else if (id == R.id.nav_family) {
-
+            switchFragment(FamilyFragment.newInstance());
         } else if (id == R.id.nav_settings) {
-
+            switchFragment(SettingsFragment.newInstance());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void switchFragment(Fragment switchToFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, switchToFragment)
+                .commit();
+    }
+
 }
