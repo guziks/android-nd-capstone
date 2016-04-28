@@ -1,0 +1,5 @@
+# Seafile repository ignore list
+seafile-ignore.txt
+
+# Project specific
+design/
