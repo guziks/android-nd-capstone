@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SignActivity.class);
         intent.setAction(SignActivity.ACTION_SIGN_OUT);
         startActivity(intent);
+        finish();
     }
 
     @SuppressWarnings("ConstantConditions")
