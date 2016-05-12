@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -117,34 +118,31 @@ public class SignActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "Sign in result status code: " + result.getStatus().getStatusCode());
+        Log.d(TAG, "Sign in status code: " + result.getStatus().getStatusCode());
         if (result.isSuccess()) {
-            Log.d(TAG, "Sign in successful");
-            GoogleSignInAccount account = result.getSignInAccount();
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            //noinspection ConstantConditions
-            editor.putString(PREF_USER_NAME, account.getDisplayName());
-            editor.putString(PREF_USER_EMAIL, account.getEmail());
-            editor.putString(PREF_USER_ID, account.getId());
-            editor.putString(PREF_USER_ID_TOKEN, account.getIdToken());
-            editor.putBoolean(PREF_USER_SIGNED_IN, true);
-            if (account.getPhotoUrl() != null) {
-                editor.putString(PREF_USER_PHOTO_URL, account.getPhotoUrl().toString()); // null check because of toString
-            }
-            editor.commit();
-            //noinspection ConstantConditions
-//            Toast.makeText(this,
-//                    "Name " + result.getSignInAccount().getDisplayName(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this,
-//                    "Email " + result.getSignInAccount().getEmail(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this,
-//                    "ID " + result.getSignInAccount().getId(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this,
-//                    "TokenID " + result.getSignInAccount().getIdToken(), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this,
-//                    "Photo URL " + result.getSignInAccount().getPhotoUrl(), Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Sign in successful");
+            saveUserInfo(result);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
         } else {
-            Log.d(TAG, "Sign in failed");
+            Log.i(TAG, "Sign in unsuccessful");
+            Toast.makeText(this, "Sign in unsuccessful", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveUserInfo(GoogleSignInResult result) {
+        GoogleSignInAccount account = result.getSignInAccount();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        //noinspection ConstantConditions
+        editor.putString(PREF_USER_NAME, account.getDisplayName());
+        editor.putString(PREF_USER_EMAIL, account.getEmail());
+        editor.putString(PREF_USER_ID, account.getId());
+        editor.putString(PREF_USER_ID_TOKEN, account.getIdToken());
+        editor.putBoolean(PREF_USER_SIGNED_IN, true);
+        if (account.getPhotoUrl() != null) {
+            editor.putString(PREF_USER_PHOTO_URL, account.getPhotoUrl().toString()); // null check because of toString
+        }
+        editor.commit();
     }
 }
