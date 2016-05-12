@@ -99,9 +99,7 @@ public class SignActivity extends AppCompatActivity implements GoogleApiClient.O
                     public void onResult(@NonNull Status status) {
                         if (status.getStatusCode() == CommonStatusCodes.SUCCESS) {
                             Log.i(TAG, "Sign out status code: " + status.getStatusCode());
-                            PreferenceManager.getDefaultSharedPreferences(SignActivity.this).edit()
-                                    .putBoolean(PREF_USER_SIGNED_IN, false)
-                                    .commit();
+                            clearUserInfo();
                         }
                     }
                 });
@@ -144,5 +142,18 @@ public class SignActivity extends AppCompatActivity implements GoogleApiClient.O
             editor.putString(PREF_USER_PHOTO_URL, account.getPhotoUrl().toString()); // null check because of toString
         }
         editor.commit();
+        Log.i(TAG, "User info saved");
+    }
+
+    private void clearUserInfo() {
+        PreferenceManager.getDefaultSharedPreferences(SignActivity.this).edit()
+                .remove(PREF_USER_NAME)
+                .remove(PREF_USER_EMAIL)
+                .remove(PREF_USER_ID)
+                .remove(PREF_USER_ID_TOKEN)
+                .remove(PREF_USER_PHOTO_URL)
+                .remove(PREF_USER_SIGNED_IN)
+                .commit();
+        Log.i(TAG, "User info cleared");
     }
 }
