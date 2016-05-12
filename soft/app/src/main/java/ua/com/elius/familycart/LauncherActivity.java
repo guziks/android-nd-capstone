@@ -12,13 +12,13 @@ public class LauncherActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         boolean userSignedIn = PreferenceManager.getDefaultSharedPreferences(this)
-                .getBoolean(SignInActivity.PREF_USER_SIGNED_IN, false);
+                .getBoolean(SignActivity.PREF_USER_SIGNED_IN, false);
 
         Intent intent;
         if (userSignedIn) {
             intent = new Intent(this, MainActivity.class);
         } else {
-            intent = new Intent(this, SignInActivity.class);
+            intent = new Intent(this, SignActivity.class);
         }
         this.startActivity(intent);
     }

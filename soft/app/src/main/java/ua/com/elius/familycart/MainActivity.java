@@ -1,7 +1,7 @@
 package ua.com.elius.familycart;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navHeaderRefresh(navigationView);
+        navHeaderInit(navigationView);
 
         if (savedInstanceState == null) {
             navigationView.setCheckedItem(R.id.nav_to_buy);
@@ -62,17 +63,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void navHeaderRefresh(NavigationView navigationView) {
+    private void navHeaderInit(final NavigationView navigationView) {
         View navHeader = navigationView.getHeaderView(0);
         TextView userNameView = (TextView) navHeader.findViewById(R.id.userName);
         TextView userEmailView = (TextView) navHeader.findViewById(R.id.userEmail);
         final ImageView userPhotoView = (ImageView) navHeader.findViewById(R.id.userPhoto);
+
+        final ToggleButton accountDropButton = (ToggleButton) navHeader.findViewById(R.id.accountDropButton);
+        accountDropButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigationView.getMenu().clear();
+                if (accountDropButton.isChecked()) {
+                    navigationView.inflateMenu(R.menu.activity_main_drawer_account);
+                } else {
+                    navigationView.inflateMenu(R.menu.activity_main_drawer);
+                }
+            }
+        });
+
         String name = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(SignInActivity.PREF_USER_NAME, "");
+                .getString(SignActivity.PREF_USER_NAME, "");
         String email = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(SignInActivity.PREF_USER_EMAIL, "");
+                .getString(SignActivity.PREF_USER_EMAIL, "");
         String photoUrl = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString(SignInActivity.PREF_USER_PHOTO_URL, "");
+                .getString(SignActivity.PREF_USER_PHOTO_URL, "");
+
         userNameView.setText(name);
         userEmailView.setText(email);
         Glide.with(this).load(photoUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(userPhotoView) {
@@ -84,6 +100,12 @@ public class MainActivity extends AppCompatActivity
                 userPhotoView.setImageDrawable(circularBitmapDrawable);
             }
         });
+    }
+
+    public void signOut(MenuItem item) {
+        Intent intent = new Intent(this, SignActivity.class);
+        intent.setAction(SignActivity.ACTION_SIGN_OUT);
+        startActivity(intent);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -155,5 +177,4 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_frame, switchToFragment)
                 .commit();
     }
-
 }
