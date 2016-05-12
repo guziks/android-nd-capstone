@@ -1,11 +1,16 @@
 package ua.com.elius.familycart;
 
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +19,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,12 +53,37 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navHeaderRefresh(navigationView);
 
         if (savedInstanceState == null) {
             navigationView.setCheckedItem(R.id.nav_to_buy);
             switchFragment(ToBuyListFragment.newInstance());
             getSupportActionBar().setTitle("To buy");
         }
+    }
+
+    private void navHeaderRefresh(NavigationView navigationView) {
+        View navHeader = navigationView.getHeaderView(0);
+        TextView userNameView = (TextView) navHeader.findViewById(R.id.userName);
+        TextView userEmailView = (TextView) navHeader.findViewById(R.id.userEmail);
+        final ImageView userPhotoView = (ImageView) navHeader.findViewById(R.id.userPhoto);
+        String name = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SignInActivity.PREF_USER_NAME, "");
+        String email = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SignInActivity.PREF_USER_EMAIL, "");
+        String photoUrl = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SignInActivity.PREF_USER_PHOTO_URL, "");
+        userNameView.setText(name);
+        userEmailView.setText(email);
+        Glide.with(this).load(photoUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(userPhotoView) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(MainActivity.this.getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                userPhotoView.setImageDrawable(circularBitmapDrawable);
+            }
+        });
     }
 
     @SuppressWarnings("ConstantConditions")
