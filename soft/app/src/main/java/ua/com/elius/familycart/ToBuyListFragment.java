@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import android.view.ViewGroup;
 public class ToBuyListFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private ShoppingListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public ToBuyListFragment() {
@@ -26,13 +27,7 @@ public class ToBuyListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_to_buy_list, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_to_buy_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.to_by_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -42,6 +37,12 @@ public class ToBuyListFragment extends Fragment {
 
         mAdapter = new ShoppingListAdapter(getDummyDataset());
         mRecyclerView.setAdapter(mAdapter);
+
+        ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+        return view;
     }
 
     private String[][] getDummyDataset() {

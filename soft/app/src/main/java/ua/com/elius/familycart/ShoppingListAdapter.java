@@ -1,19 +1,25 @@
 package ua.com.elius.familycart;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder> {
+public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>
+        implements ListItemTouchHelperAdapter {
 
-    private String[][] mDataset;
+    private static final String TAG = "ShoppingListAdapter";
+
+    private ArrayList<String[]> mDataset;
 
     public ShoppingListAdapter(String[][] dataset) {
-        mDataset = dataset;
+        mDataset = new ArrayList<>();
+        Collections.addAll(mDataset, dataset);
     }
 
     @Override
@@ -24,20 +30,40 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         return new ViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        holder.mTitle.setText(mDataset[position][0]);
-        holder.mQuantity.setText(mDataset[position][1]);
-        holder.mDescription.setText(mDataset[position][2]);
+        holder.mTitle.setText(mDataset.get(position)[0]);
+        holder.mQuantity.setText(mDataset.get(position)[1]);
+        holder.mDescription.setText(mDataset.get(position)[2]);
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Log.i(TAG, "onItemMove");
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mDataset, i, i + 1);
+                Log.i(TAG, "swap");
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mDataset, i, i - 1);
+                Log.i(TAG, "swap");
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        Log.i(TAG, "onItemDismiss");
+        mDataset.remove(position);
+        notifyItemRemoved(position);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
