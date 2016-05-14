@@ -1,10 +1,13 @@
 package ua.com.elius.familycart;
 
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,10 +19,13 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     private static final String TAG = "ShoppingListAdapter";
 
     private ArrayList<String[]> mDataset;
+    private final OnStartDragListener mDragStartListener;
 
-    public ShoppingListAdapter(String[][] dataset) {
+    public ShoppingListAdapter(String[][] dataset, OnStartDragListener dragStartListener) {
         mDataset = new ArrayList<>();
         Collections.addAll(mDataset, dataset);
+
+        mDragStartListener = dragStartListener;
     }
 
     @Override
@@ -31,10 +37,19 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTitle.setText(mDataset.get(position)[0]);
-        holder.mQuantity.setText(mDataset.get(position)[1]);
-        holder.mDescription.setText(mDataset.get(position)[2]);
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.title.setText(mDataset.get(position)[0]);
+        holder.quantity.setText(mDataset.get(position)[1]);
+        holder.description.setText(mDataset.get(position)[2]);
+        holder.handle.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(holder);
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -67,15 +82,17 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle;
-        public TextView mQuantity;
-        public TextView mDescription;
+        public TextView title;
+        public TextView quantity;
+        public TextView description;
+        public ImageView handle;
 
         public ViewHolder(View v) {
             super(v);
-            mTitle = (TextView) v.findViewById(R.id.item_title);
-            mQuantity = (TextView) v.findViewById(R.id.item_quantity);
-            mDescription = (TextView) v.findViewById(R.id.item_description);
+            title = (TextView) v.findViewById(R.id.item_title);
+            quantity = (TextView) v.findViewById(R.id.item_quantity);
+            description = (TextView) v.findViewById(R.id.item_description);
+            handle = (ImageView) v.findViewById(R.id.drag_handle);
         }
     }
 }

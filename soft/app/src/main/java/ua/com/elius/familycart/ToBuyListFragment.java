@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ToBuyListFragment extends Fragment {
+public class ToBuyListFragment extends Fragment implements OnStartDragListener {
 
     private RecyclerView mRecyclerView;
     private ShoppingListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ItemTouchHelper mItemTouchHelper;
 
     public ToBuyListFragment() {
         // Required empty public constructor
@@ -35,12 +36,12 @@ public class ToBuyListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new ShoppingListAdapter(getDummyDataset());
+        mAdapter = new ShoppingListAdapter(getDummyDataset(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mItemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         return view;
     }
@@ -56,5 +57,10 @@ public class ToBuyListFragment extends Fragment {
         };
 
         return dataset;
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
     }
 }
