@@ -1,13 +1,13 @@
 package ua.com.elius.familycart;
 
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,7 +89,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         public ImageView handle;
         public ImageView bought;
         public ImageView wontBuy;
-        public CardView card;
+        public FrameLayout front;
 
         public ViewHolder(View v) {
             super(v);
@@ -99,7 +99,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
             handle = (ImageView) v.findViewById(R.id.drag_handle);
             bought = (ImageView) v.findViewById(R.id.bg_icon_bought);
             wontBuy = (ImageView) v.findViewById(R.id.bg_icon_wont_by);
-            card = (CardView) v.findViewById(R.id.item_card);
+            front = (FrameLayout) v.findViewById(R.id.item_front);
         }
     }
 }
