@@ -47,16 +47,21 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        getDefaultUIUtil().clearView(((ShoppingListAdapter.ViewHolder) viewHolder).card);
+    }
+
+    @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            float width = (float) viewHolder.itemView.getWidth();
-            float alpha = 1.0f - Math.abs(dX) / width;
-            viewHolder.itemView.setAlpha(alpha);
-            viewHolder.itemView.setTranslationX(dX);
+            getDefaultUIUtil().onDraw(c, recyclerView,
+                    ((ShoppingListAdapter.ViewHolder) viewHolder).card,
+                    dX, dY, actionState, isCurrentlyActive);
         } else {
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            super.onChildDraw(c, recyclerView, viewHolder,
+                    dX, dY, actionState, isCurrentlyActive);
         }
     }
 }
