@@ -9,4 +9,10 @@
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#727272</color>
     <color name="divider">#B6B6B6</color>
+
+    <!--actually unused-->
+    <color name="swipeBought">#43A047</color>
+    <color name="swipeWontBuy">#EF6C00</color>
+    <color name="swipeToBuy">#0288D1</color>
+    <color name="swipeDelete">#EF5350</color>
 </resources>
