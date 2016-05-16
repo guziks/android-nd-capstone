@@ -39,7 +39,9 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener {
         mAdapter = new ShoppingListAdapter(getDummyDataset(), this);
         mRecyclerView.setAdapter(mAdapter);
 
-        ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter);
+        ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter,
+                ShoppingListAdapter.ViewHolder.MODE_BOUGHT,
+                ShoppingListAdapter.ViewHolder.MODE_WONT_BUY);
         mItemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 

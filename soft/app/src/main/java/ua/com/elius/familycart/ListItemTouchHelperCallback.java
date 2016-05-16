@@ -10,9 +10,15 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private static final String TAG = "TouchHelperCallback";
 
     private final ListItemTouchHelperAdapter mAdapter;
+    private @ShoppingListAdapter.ViewHolder.ItemMode int mPositiveSwipeMode;
+    private @ShoppingListAdapter.ViewHolder.ItemMode int mNegativeSwipeMode;
 
-    public ListItemTouchHelperCallback(ListItemTouchHelperAdapter adapter) {
+    public ListItemTouchHelperCallback(ListItemTouchHelperAdapter adapter,
+           @ShoppingListAdapter.ViewHolder.ItemMode int positiveSwipeMode,
+           @ShoppingListAdapter.ViewHolder.ItemMode int negativeSwipeMode) {
         mAdapter = adapter;
+        mPositiveSwipeMode = positiveSwipeMode;
+        mNegativeSwipeMode = negativeSwipeMode;
     }
 
     @Override
@@ -61,10 +67,10 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             ShoppingListAdapter.ViewHolder holder = (ShoppingListAdapter.ViewHolder) viewHolder;
             if (dX > 0) {
-                holder.setMode(ShoppingListAdapter.ViewHolder.MODE_BOUGHT);
+                holder.setMode(mPositiveSwipeMode);
             }
             if (dX < 0){
-                holder.setMode(ShoppingListAdapter.ViewHolder.MODE_WONT_BUY);
+                holder.setMode(mNegativeSwipeMode);
             }
             getDefaultUIUtil().onDraw(c, recyclerView,
                     holder.front,
