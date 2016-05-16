@@ -1,7 +1,6 @@
 package ua.com.elius.familycart;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,7 @@ import android.view.ViewGroup;
 public class ToBuyListFragment extends Fragment implements OnStartDragListener {
 
     private RecyclerView mRecyclerView;
-    private ShoppingListAdapter mAdapter;
+    private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemTouchHelper mItemTouchHelper;
 
@@ -36,12 +35,12 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new ShoppingListAdapter(getDummyDataset(), this);
+        mAdapter = new ListAdapter(getDummyDataset(), this);
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter,
-                ShoppingListAdapter.ViewHolder.MODE_BOUGHT,
-                ShoppingListAdapter.ViewHolder.MODE_WONT_BUY);
+                ListViewHolder.MODE_BOUGHT,
+                ListViewHolder.MODE_WONT_BUY);
         mItemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
