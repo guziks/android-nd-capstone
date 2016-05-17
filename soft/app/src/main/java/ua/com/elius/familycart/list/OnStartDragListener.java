@@ -1,4 +1,4 @@
-package ua.com.elius.familycart;
+package ua.com.elius.familycart.list;
 
 import android.support.v7.widget.RecyclerView;
 

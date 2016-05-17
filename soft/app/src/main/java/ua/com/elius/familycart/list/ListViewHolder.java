@@ -1,4 +1,4 @@
-package ua.com.elius.familycart;
+package ua.com.elius.familycart.list;
 
 import android.graphics.Color;
 import android.support.annotation.IntDef;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import ua.com.elius.familycart.R;
 
 public class ListViewHolder extends RecyclerView.ViewHolder {
 

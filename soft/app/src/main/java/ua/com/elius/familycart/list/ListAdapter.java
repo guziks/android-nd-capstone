@@ -1,4 +1,4 @@
-package ua.com.elius.familycart;
+package ua.com.elius.familycart.list;
 
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import ua.com.elius.familycart.R;
 
 public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
         implements ListItemTouchHelperAdapter {
