@@ -35,17 +35,13 @@ public interface PersonModel extends BaseModel {
 
     /**
      * Is this person selected for sharing.
-     * Can be {@code null}.
      */
-    @Nullable
-    Boolean getSharingToAllowed();
+    boolean getSharingToAllowed();
 
     /**
      * Does this person selected me for sharing
-     * Can be {@code null}.
      */
-    @Nullable
-    Boolean getSharingFromAllowed();
+    boolean getSharingFromAllowed();
 
     /**
      * Last modification timestamp.

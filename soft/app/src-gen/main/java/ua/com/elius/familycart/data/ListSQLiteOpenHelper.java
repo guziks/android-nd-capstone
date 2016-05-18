@@ -42,8 +42,8 @@ public class ListSQLiteOpenHelper extends SQLiteOpenHelper {
             + PersonColumns.GID + " TEXT, "
             + PersonColumns.DISPLAY_NAME + " TEXT, "
             + PersonColumns.IMAGE_URL + " TEXT, "
-            + PersonColumns.SHARING_TO_ALLOWED + " INTEGER, "
-            + PersonColumns.SHARING_FROM_ALLOWED + " INTEGER, "
+            + PersonColumns.SHARING_TO_ALLOWED + " INTEGER NOT NULL DEFAULT 0, "
+            + PersonColumns.SHARING_FROM_ALLOWED + " INTEGER NOT NULL DEFAULT 0, "
             + PersonColumns.TIME_MODIFIED + " INTEGER "
             + ", CONSTRAINT unique_gid UNIQUE (gid) ON CONFLICT REPLACE"
             + " );";

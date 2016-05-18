@@ -198,7 +198,7 @@ public class PersonSelection extends AbstractSelection<PersonSelection> {
         return this;
     }
 
-    public PersonSelection sharingToAllowed(Boolean value) {
+    public PersonSelection sharingToAllowed(boolean value) {
         addEquals(PersonColumns.SHARING_TO_ALLOWED, toObjectArray(value));
         return this;
     }
@@ -213,7 +213,7 @@ public class PersonSelection extends AbstractSelection<PersonSelection> {
         return this;
     }
 
-    public PersonSelection sharingFromAllowed(Boolean value) {
+    public PersonSelection sharingFromAllowed(boolean value) {
         addEquals(PersonColumns.SHARING_FROM_ALLOWED, toObjectArray(value));
         return this;
     }

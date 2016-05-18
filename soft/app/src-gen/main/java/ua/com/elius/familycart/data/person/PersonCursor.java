@@ -58,21 +58,21 @@ public class PersonCursor extends AbstractCursor implements PersonModel {
 
     /**
      * Is this person selected for sharing.
-     * Can be {@code null}.
      */
-    @Nullable
-    public Boolean getSharingToAllowed() {
+    public boolean getSharingToAllowed() {
         Boolean res = getBooleanOrNull(PersonColumns.SHARING_TO_ALLOWED);
+        if (res == null)
+            throw new NullPointerException("The value of 'sharing_to_allowed' in the database was null, which is not allowed according to the model definition");
         return res;
     }
 
     /**
      * Does this person selected me for sharing
-     * Can be {@code null}.
      */
-    @Nullable
-    public Boolean getSharingFromAllowed() {
+    public boolean getSharingFromAllowed() {
         Boolean res = getBooleanOrNull(PersonColumns.SHARING_FROM_ALLOWED);
+        if (res == null)
+            throw new NullPointerException("The value of 'sharing_from_allowed' in the database was null, which is not allowed according to the model definition");
         return res;
     }
 

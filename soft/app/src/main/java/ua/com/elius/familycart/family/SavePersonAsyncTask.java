@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.model.people.PersonBuffer;
 
 import ua.com.elius.familycart.data.person.PersonColumns;
@@ -43,18 +42,19 @@ public class SavePersonAsyncTask extends AsyncTask<PersonBuffer, Void, Void> {
         String displayName = personBuffer.get(i).getDisplayName();
         String imageUrl = personBuffer.get(i).getImage().getUrl();
 
-        PersonSelection whereSameId = new PersonSelection().gid(id);
-        PersonCursor currentPersonData = whereSameId.query(resolver);
-        currentPersonData.moveToFirst();
-        Boolean sharingFrom = currentPersonData.getSharingFromAllowed();
-        Boolean sharingTo = currentPersonData.getSharingToAllowed();
-
         PersonContentValues newPersonData = new PersonContentValues()
                 .putGid(id)
                 .putDisplayName(displayName)
-                .putImageUrl(imageUrl)
-                .putSharingFromAllowed(sharingFrom)
-                .putSharingToAllowed(sharingTo);
+                .putImageUrl(imageUrl);
+
+        PersonSelection whereSameId = new PersonSelection().gid(id);
+        PersonCursor currentPersonData = whereSameId.query(resolver);
+        if (currentPersonData.getCount() > 0) {
+            currentPersonData.moveToFirst();
+            newPersonData.putSharingFromAllowed(currentPersonData.getSharingFromAllowed());
+            newPersonData.putSharingToAllowed(currentPersonData.getSharingToAllowed());
+            newPersonData.putTimeModified(currentPersonData.getTimeModified());
+        }
 
         resolver.insert(PersonColumns.CONTENT_URI, newPersonData.values());
     }

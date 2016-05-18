@@ -81,28 +81,20 @@ public class PersonContentValues extends AbstractContentValues {
     /**
      * Is this person selected for sharing.
      */
-    public PersonContentValues putSharingToAllowed(@Nullable Boolean value) {
+    public PersonContentValues putSharingToAllowed(boolean value) {
         mContentValues.put(PersonColumns.SHARING_TO_ALLOWED, value);
         return this;
     }
 
-    public PersonContentValues putSharingToAllowedNull() {
-        mContentValues.putNull(PersonColumns.SHARING_TO_ALLOWED);
-        return this;
-    }
 
     /**
      * Does this person selected me for sharing
      */
-    public PersonContentValues putSharingFromAllowed(@Nullable Boolean value) {
+    public PersonContentValues putSharingFromAllowed(boolean value) {
         mContentValues.put(PersonColumns.SHARING_FROM_ALLOWED, value);
         return this;
     }
 
-    public PersonContentValues putSharingFromAllowedNull() {
-        mContentValues.putNull(PersonColumns.SHARING_FROM_ALLOWED);
-        return this;
-    }
 
     /**
      * Last modification timestamp.

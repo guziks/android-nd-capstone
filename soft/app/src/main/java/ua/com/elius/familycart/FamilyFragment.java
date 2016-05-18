@@ -1,9 +1,12 @@
 package ua.com.elius.familycart;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +22,15 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.PersonBuffer;
 
+import ua.com.elius.familycart.data.person.PersonColumns;
+import ua.com.elius.familycart.data.person.PersonCursor;
 import ua.com.elius.familycart.family.FamilyAdapter;
 import ua.com.elius.familycart.family.SavePersonAsyncTask;
 
 
 public class FamilyFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks, ResultCallback<People.LoadPeopleResult> {
+        GoogleApiClient.ConnectionCallbacks, ResultCallback<People.LoadPeopleResult>,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "FamilyFragment";
 
@@ -33,13 +39,20 @@ public class FamilyFragment extends Fragment implements GoogleApiClient.OnConnec
     private LinearLayoutManager mLayoutManager;
     private FamilyAdapter mAdapter;
 
+    private static final int FAMILY_LOADER = 0;
+
     public FamilyFragment() {
         // Required empty public constructor
     }
 
     public static FamilyFragment newInstance() {
-        FamilyFragment fragment = new FamilyFragment();
-        return fragment;
+        return new FamilyFragment();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(FAMILY_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -61,7 +74,7 @@ public class FamilyFragment extends Fragment implements GoogleApiClient.OnConnec
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new FamilyAdapter(getDummyDataset(), getContext());
+        mAdapter = new FamilyAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -123,5 +136,26 @@ public class FamilyFragment extends Fragment implements GoogleApiClient.OnConnec
                 {"112057735653162877298", "Татьяна Мукомел", "https://lh3.googleusercontent.com/-trd6r3FrO7U/AAAAAAAAAAI/AAAAAAAAAAA/MqWlyNo1ab8/photo.jpg?sz=50"},
                 {"101721776426479645059", "Ярослав Станиславович Иванов", "https://lh3.googleusercontent.com/-5tRC66wKN2c/AAAAAAAAAAI/AAAAAAAAAAA/_-XA_PAhi9Y/photo.jpg?sz=50"},
         };
+    }
+
+
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getContext(),
+                PersonColumns.CONTENT_URI,
+                PersonColumns.ALL_COLUMNS,
+                null,
+                null,
+                PersonColumns.DISPLAY_NAME);
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(new PersonCursor(data));
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
     }
 }

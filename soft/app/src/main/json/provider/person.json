@@ -19,12 +19,16 @@
         {
             "documentation": "Is this person selected for sharing.",
             "name": "sharing_to_allowed",
-            "type": "Boolean"
+            "type": "Boolean",
+            "nullable": false,
+            "defaultValue": false
         },
         {
             "documentation": "Does this person selected me for sharing",
             "name": "sharing_from_allowed",
-            "type": "Boolean"
+            "type": "Boolean",
+            "nullable": false,
+            "defaultValue": false
         },
         {
             "documentation": "Last modification timestamp.",
