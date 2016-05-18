@@ -31,5 +31,11 @@
             "name": "time_modified",
             "type": "Long"
         }
+    ],
+    "constraints": [
+        {
+            "name": "unique_gid",
+            "definition": "UNIQUE (gid) ON CONFLICT REPLACE"
+        }
     ]
 }

@@ -26,6 +26,10 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <provider
+            android:name="ua.com.elius.familycart.data.ListProvider"
+            android:authorities="ua.com.elius.familycart.data"
+            android:exported="false" />
     </application>
 
 </manifest>
