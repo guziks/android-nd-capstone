@@ -1,0 +1,55 @@
+{
+    "documentation": "Shopping list item.",
+    "fields": [
+        {
+            "documentation": "Item title. For instance, Milk.",
+            "name": "title",
+            "type": "String"
+        },
+        {
+            "documentation": "Item quantity. For instance, 1 bottle",
+            "name": "quantity",
+            "type": "String",
+            "nullable": true
+        },
+        {
+            "documentation": "Flavor description. For instance, 2.5% fat",
+            "name": "description",
+            "type": "String",
+            "nullable": true
+        },
+        {
+            "documentation": "List this item belongs to.",
+            "name": "list",
+            "type": "enum",
+            "enumName": "List",
+            "enumValues": [
+                "TO_BUY",
+                "WONT_BUY",
+                "BOUGHT",
+                "DELETED"
+            ]
+        },
+        {
+            "documentation": "Number to sort by (user customized order).",
+            "name": "custom_order",
+            "type": "Integer"
+        },
+        {
+            "documentation": "Creation timestamp.",
+            "name": "time_created",
+            "type": "Long"
+        },
+        {
+            "documentation": "Last modification timestamp.",
+            "name": "time_modified",
+            "type": "Long"
+        },
+        {
+            "documentation": "When item has been bought timestamp.",
+            "name": "time_bought",
+            "type": "Long",
+            "nullable": true
+        }
+    ]
+}

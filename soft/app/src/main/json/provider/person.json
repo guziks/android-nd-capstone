@@ -1,0 +1,35 @@
+{
+    "documentation": "Family member or friend.",
+    "fields": [
+        {
+            "documentation": "Google ID. Corresponds to gms...Person.getId().",
+            "name": "gid",
+            "type": "String"
+        },
+        {
+            "documentation": "Member name. Corresponds to gms...Person.getDisplayName().",
+            "name": "display_name",
+            "type": "String"
+        },
+        {
+            "documentation": "Photo, avatar, etc. Corresponds to gms...Person.getImage().",
+            "name": "image_url",
+            "type": "String"
+        },
+        {
+            "documentation": "Is this person selected for sharing.",
+            "name": "sharing_to_allowed",
+            "type": "Boolean"
+        },
+        {
+            "documentation": "Does this person selected me for sharing",
+            "name": "sharing_from_allowed",
+            "type": "Boolean"
+        },
+        {
+            "documentation": "Last modification timestamp.",
+            "name": "time_modified",
+            "type": "Long"
+        }
+    ]
+}

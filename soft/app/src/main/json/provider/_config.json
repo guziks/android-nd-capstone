@@ -1,0 +1,13 @@
+{
+    "syntaxVersion": 3,
+    "projectPackageId": "ua.com.elius.familycart",
+    "authority": "ua.com.elius.familycart.data",
+    "providerJavaPackage": "ua.com.elius.familycart.data",
+    "providerClassName": "ListProvider",
+    "sqliteOpenHelperClassName": "ListSQLiteOpenHelper",
+    "sqliteOpenHelperCallbacksClassName": "ListSQLiteOpenHelperCallbacks",
+    "databaseFileName": "main.db",
+    "databaseVersion": 1,
+    "enableForeignKeys": true,
+    "useAnnotations": true
+}
