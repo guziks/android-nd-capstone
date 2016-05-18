@@ -6,30 +6,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.plus.model.people.PersonBuffer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ua.com.elius.familycart.family.FamilyAdapter;
-import ua.com.elius.familycart.list.ListAdapter;
-import ua.com.elius.familycart.list.ListItemTouchHelperCallback;
-import ua.com.elius.familycart.list.ListViewHolder;
+import ua.com.elius.familycart.family.SavePersonAsyncTask;
 
 
 public class FamilyFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener,
@@ -100,21 +91,7 @@ public class FamilyFragment extends Fragment implements GoogleApiClient.OnConnec
     public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult) {
         if (loadPeopleResult.getStatus().getStatusCode() == CommonStatusCodes.SUCCESS) {
             PersonBuffer personBuffer = loadPeopleResult.getPersonBuffer();
-            try {
-                int count = personBuffer.getCount();
-                for (int i = 0; i < count; i++) {
-//                    Log.d(TAG, "ID: " + personBuffer.get(i).getId());
-//                    Log.d(TAG, "Display name: " + personBuffer.get(i).getDisplayName());
-//                    Log.d(TAG, "Image URL: " + personBuffer.get(i).getImage().getUrl());
-                    Log.d(TAG, "{\"" + personBuffer.get(i).getId() + "\", \"" +
-                            personBuffer.get(i).getDisplayName() + "\", \"" +
-                            personBuffer.get(i).getImage().getUrl() + "\"},"
-                    );
-//                    Log.d(TAG, "Display name: " + personBuffer.get(i).getCover().getCoverPhoto().getUrl());
-                }
-            } finally {
-                personBuffer.release();
-            }
+            new SavePersonAsyncTask(getContext()).execute(personBuffer);
         } else {
             Log.e(TAG, "Error requesting visible circles: " + loadPeopleResult.getStatus());
         }
