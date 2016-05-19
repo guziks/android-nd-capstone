@@ -5,6 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
+import ua.com.elius.familycart.data.item.List;
+
+import static ua.com.elius.familycart.data.item.List.BOUGHT;
+import static ua.com.elius.familycart.data.item.List.TO_BUY;
+import static ua.com.elius.familycart.data.item.List.WONT_BUY;
+
 public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private static final String TAG = "TouchHelperCallback";
@@ -39,7 +45,15 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         Log.i(TAG, "onSwiped");
-        mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+        switch (mAdapter.getListType()) {
+            case TO_BUY:
+                if (direction == ItemTouchHelper.END) {
+                    mAdapter.onChangeList(BOUGHT, viewHolder.getAdapterPosition());
+                } else {
+                    mAdapter.onChangeList(WONT_BUY, viewHolder.getAdapterPosition());
+                }
+                break;
+        }
     }
 
     @Override
