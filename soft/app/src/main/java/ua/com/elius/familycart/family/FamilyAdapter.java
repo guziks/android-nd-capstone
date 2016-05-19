@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,19 +52,14 @@ public class FamilyAdapter extends RecyclerView.Adapter<FamilyAdapter.ViewHolder
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
 
-            Toast.makeText(mContext, mCursor.getDisplayName(), Toast.LENGTH_SHORT).show();
-
             ContentValues values = new ContentValues();
             DatabaseUtils.cursorRowToContentValues(mCursor, values);
             values.put(PersonColumns.SHARING_TO_ALLOWED, sharingToAllowed);
             values.put(PersonColumns.TIME_MODIFIED, System.currentTimeMillis());
-            PersonSelection where = new PersonSelection().gid(mCursor.getGid());
 
-            mContext.getContentResolver().update(PersonColumns.CONTENT_URI, values, where.sel(), where.args());
-//            mContext.getContentResolver().update(PersonColumns.CONTENT_URI, values,
-//                    PersonColumns.GID + " = ?",
-//                    new String[]{mCursor.getGid()});
-//            mContext.getContentResolver().insert(PersonColumns.CONTENT_URI, values);
+            PersonSelection whereSameId = new PersonSelection().gid(mCursor.getGid());
+
+            new SelectPersonAsyncTask(mContext).execute(new Pair<>(values, whereSameId));
         }
     }
 
