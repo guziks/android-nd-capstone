@@ -8,4 +8,7 @@
     <string name="google_services_oauth_web_client_id">873797948936-dv7004pc1r86f8nsgldm0rke9p7guqft.apps.googleusercontent.com</string>
     <string name="default_user_name">Android Studio</string>
     <string name="default_user_email">android.studio@android.com</string>
+
+    <string name="edit_done_save">Save</string>
+    <string name="activity_label_edit_item">Edit item</string>
 </resources>
