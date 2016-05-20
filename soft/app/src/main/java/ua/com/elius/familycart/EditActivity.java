@@ -62,6 +62,8 @@ public class EditActivity extends AppCompatActivity {
             getContentResolver().insert(ItemColumns.CONTENT_URI, item.values());
 
             Log.i(TAG, "Save item: " + item.values().toString());
+
+            setResult(RESULT_OK);
         }
         finish();
     }

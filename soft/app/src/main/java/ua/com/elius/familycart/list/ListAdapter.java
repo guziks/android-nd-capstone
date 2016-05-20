@@ -86,6 +86,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     @Override
     public void onChangeList(List targetList, int position) {
         mCursor.moveToPosition(position);
+        Log.d(TAG, "onChangeList: moveToPosition " + position);
 
         long timestamp = System.currentTimeMillis();
         
@@ -129,5 +130,16 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     public List getListType() {
         return mListType;
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        mCursor.moveToPosition(position);
+        return mCursor.getId();
     }
 }

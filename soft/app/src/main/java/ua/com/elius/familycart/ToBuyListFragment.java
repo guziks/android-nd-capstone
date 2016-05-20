@@ -1,8 +1,12 @@
 package ua.com.elius.familycart;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -29,6 +33,8 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     private static final String TAG = "ToBuyListFragment";
 
+    public static final int RC_NEW_ITEM = 1;
+
     private RecyclerView mRecyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -42,6 +48,14 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newItem();
+            }
+        });
+
         getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -109,6 +123,31 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+        nullCursor();
+    }
+
+    private void nullCursor() {
         mAdapter.swapCursor(null);
+        Log.d(TAG, "swapCursor(null)");
+    }
+
+    public void newItem() {
+        Intent intent = new Intent(getContext(), EditActivity.class);
+        startActivityForResult(intent, RC_NEW_ITEM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_NEW_ITEM && resultCode == Activity.RESULT_OK) {
+//            mAdapter.notifyDataSetChanged();
+//            Log.d(TAG, "notifyDataSetChanged");
+//            nullCursor();
+            getLoaderManager().destroyLoader(TO_BUY_LOADER);
+            getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
+//            getLoaderManager().restartLoader(TO_BUY_LOADER, null, this);
+//            Log.d(TAG, "restartLoader");
+        }
     }
 }
