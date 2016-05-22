@@ -2,19 +2,27 @@ package ua.com.elius.familycart.list;
 
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 public abstract class RecyclerViewCursorAdapter<VH
         extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
+    private static final String TAG = "RVCursorAdapter";
+
     private boolean mDataValid;
     private int mRowIDColumn;
     private Cursor mCursor;
+    private int mLastSwipePosition = RecyclerView.NO_POSITION;
 
     public abstract void onBindViewHolderCursor(VH holder, Cursor cursor);
 
     public RecyclerViewCursorAdapter() {
         setHasStableIds(true);
+    }
+
+    public void setLastSwipePosition(int position) {
+        mLastSwipePosition = position;
     }
 
     @Override
@@ -72,7 +80,17 @@ public abstract class RecyclerViewCursorAdapter<VH
             mRowIDColumn = newCursor.getColumnIndexOrThrow("_id");
             mDataValid = true;
             // notify the observers about the new cursor
-            notifyDataSetChanged();
+            if (oldCursor != null) {
+                if (newCursor.getCount() > oldCursor.getCount()) {
+                    notifyItemInserted(oldCursor.getCount());
+                } else if (newCursor.getCount() < oldCursor.getCount()) {
+                    notifyItemRemoved(mLastSwipePosition);
+                } else {
+                    notifyDataSetChanged();
+                }
+            } else {
+                notifyDataSetChanged();
+            }
         } else {
             mRowIDColumn = -1;
             mDataValid = false;

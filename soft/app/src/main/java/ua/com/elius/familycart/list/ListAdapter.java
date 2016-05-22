@@ -85,13 +85,14 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
 
     @Override
     public void onChangeList(List targetList, int position) {
+        setLastSwipePosition(position);
         ItemCursor itemCursor = new ItemCursor(getCursor());
         itemCursor.moveToPosition(position);
 
         long timestamp = System.currentTimeMillis();
 
         ContentValues values = new ContentValues();
-        DatabaseUtils.cursorRowToContentValues(getCursor(), values);
+        DatabaseUtils.cursorRowToContentValues(itemCursor, values);
         values.put(ItemColumns.LIST, targetList.ordinal());
         values.put(ItemColumns.TIME_MODIFIED, timestamp);
         if (targetList == List.BOUGHT) {
