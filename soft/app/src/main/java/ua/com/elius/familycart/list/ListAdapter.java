@@ -34,6 +34,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     private Context mContext;
     private ItemCursor mCursor;
     private List mListType;
+    private int mLastListChangePosition;
 
     public ListAdapter(Context context, List listType, OnStartDragListener dragStartListener) {
         mContext = context;
@@ -52,6 +53,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public void onBindViewHolder(final ListViewHolder holder, int position) {
+        if (mCursor == null || mCursor.isClosed()) {
+            return;
+        }
         mCursor.moveToPosition(position);
 
         holder.title.setText(mCursor.getTitle());
@@ -87,12 +91,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public void onChangeList(List targetList, int position) {
-        int prevPos = mCursor.getPosition();
+        mLastListChangePosition = position;
         mCursor.moveToPosition(position);
-        Log.d(TAG, "onChangeList: moveToPosition " + position);
 
         long timestamp = System.currentTimeMillis();
-        
+
         ContentValues values = new ContentValues();
         DatabaseUtils.cursorRowToContentValues(mCursor, values);
         values.put(ItemColumns.LIST, targetList.ordinal());
@@ -104,12 +107,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
         new ChangeListAsyncTask(mContext).execute(new Pair<>(values, where));
 //        mContext.getContentResolver().update(ItemColumns.CONTENT_URI, values, where.sel(), where.args());
-
-//        notifyItemRemoved(position);
-//        Toast.makeText(mContext, "Notified that removed: " + position, Toast.LENGTH_SHORT).show();
-//        notifyItemChanged(position);
-//        notifyDataSetChanged();
-        mCursor.moveToPosition(prevPos);
     }
 
 //    @Override
@@ -126,14 +123,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     }
 
     public void swapCursor(ItemCursor newCursor) {
-        if (mCursor != null && newCursor != null && newCursor.getCount() > mCursor.getCount()) {
-            mCursor = newCursor;
-            notifyItemInserted(newCursor.getCount());
-            Log.d(TAG, "notifyItemInserted");
+        ItemCursor oldCursor = mCursor;
+        mCursor = newCursor;
+
+        if (oldCursor != null && newCursor != null) {
+            if (newCursor.getCount() < oldCursor.getCount()) {
+                notifyItemRemoved(mLastListChangePosition);
+            } else if (newCursor.getCount() > oldCursor.getCount()) {
+                notifyItemInserted(oldCursor.getCount());
+            }
+//            notifyItemRemoved(mLastListChangePosition);
+//            notifyItemRangeChanged(0, oldCursor.getCount());
         } else {
-            mCursor = newCursor;
             notifyDataSetChanged();
-            Log.d(TAG, "notifyDataSetChanged");
+        }
+
+        if (oldCursor != null) {
+            oldCursor.close();
         }
     }
 
@@ -147,10 +153,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public long getItemId(int position) {
-        int prevPos = mCursor.getPosition();
-        mCursor.moveToPosition(position);
-        long id = mCursor.getId();
-        mCursor.moveToPosition(prevPos);
+        long id;
+        if (mCursor != null && !mCursor.isClosed()) {
+            mCursor.moveToPosition(position);
+            id = mCursor.getId();
+        } else {
+            id = RecyclerView.NO_ID;
+        }
         return id;
     }
 }

@@ -147,6 +147,7 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 //            nullCursor();
 //            getLoaderManager().destroyLoader(TO_BUY_LOADER);
 //            getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
+//            Log.d(TAG, "initLoader");
 //            getLoaderManager().restartLoader(TO_BUY_LOADER, null, this);
 //            Log.d(TAG, "restartLoader");
 //            mAdapter.notifyItemInserted(mAdapter.getItemCount());
