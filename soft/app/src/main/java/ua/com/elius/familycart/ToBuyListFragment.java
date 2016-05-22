@@ -118,11 +118,12 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(new ItemCursor(data));
-        Log.d(TAG, "swapCursor");
+        Log.d(TAG, "swapCursor count = " + data.getCount());
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset");
         nullCursor();
     }
 
@@ -144,10 +145,13 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 //            mAdapter.notifyDataSetChanged();
 //            Log.d(TAG, "notifyDataSetChanged");
 //            nullCursor();
-            getLoaderManager().destroyLoader(TO_BUY_LOADER);
-            getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
+//            getLoaderManager().destroyLoader(TO_BUY_LOADER);
+//            getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
 //            getLoaderManager().restartLoader(TO_BUY_LOADER, null, this);
 //            Log.d(TAG, "restartLoader");
+//            mAdapter.notifyItemInserted(mAdapter.getItemCount());
+//            mAdapter.notifyItemInserted(mAdapter.getItemCount());
+
         }
     }
 }

@@ -8,6 +8,7 @@ import android.support.annotation.IntDef;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +39,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
         mContext = context;
         mListType = listType;
         mDragStartListener = dragStartListener;
+        setHasStableIds(true);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public void onChangeList(List targetList, int position) {
+        int prevPos = mCursor.getPosition();
         mCursor.moveToPosition(position);
         Log.d(TAG, "onChangeList: moveToPosition " + position);
 
@@ -98,12 +101,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
             values.put(ItemColumns.TIME_BOUGHT, timestamp);
         }
         ItemSelection where = new ItemSelection().id(mCursor.getId());
-        mContext.getContentResolver().update(ItemColumns.CONTENT_URI, values, where.sel(), where.args());
 
-        notifyItemRemoved(position);
+        new ChangeListAsyncTask(mContext).execute(new Pair<>(values, where));
+//        mContext.getContentResolver().update(ItemColumns.CONTENT_URI, values, where.sel(), where.args());
+
+//        notifyItemRemoved(position);
 //        Toast.makeText(mContext, "Notified that removed: " + position, Toast.LENGTH_SHORT).show();
 //        notifyItemChanged(position);
 //        notifyDataSetChanged();
+        mCursor.moveToPosition(prevPos);
     }
 
 //    @Override
@@ -120,8 +126,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     }
 
     public void swapCursor(ItemCursor newCursor) {
-        mCursor = newCursor;
-        notifyDataSetChanged();
+        if (mCursor != null && newCursor != null && newCursor.getCount() > mCursor.getCount()) {
+            mCursor = newCursor;
+            notifyItemInserted(newCursor.getCount());
+            Log.d(TAG, "notifyItemInserted");
+        } else {
+            mCursor = newCursor;
+            notifyDataSetChanged();
+            Log.d(TAG, "notifyDataSetChanged");
+        }
     }
 
     public ItemCursor getCursor() {
@@ -133,13 +146,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     }
 
     @Override
-    public void setHasStableIds(boolean hasStableIds) {
-        super.setHasStableIds(true);
-    }
-
-    @Override
     public long getItemId(int position) {
+        int prevPos = mCursor.getPosition();
         mCursor.moveToPosition(position);
-        return mCursor.getId();
+        long id = mCursor.getId();
+        mCursor.moveToPosition(prevPos);
+        return id;
     }
 }
