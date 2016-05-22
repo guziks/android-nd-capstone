@@ -25,22 +25,20 @@ import ua.com.elius.familycart.data.item.ItemSelection;
 import ua.com.elius.familycart.data.item.List;
 import ua.com.elius.familycart.data.person.PersonCursor;
 
-public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
+public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
         implements ListItemTouchHelperAdapter {
 
     private static final String TAG = "ListAdapter";
 
     private final OnStartDragListener mDragStartListener;
     private Context mContext;
-    private ItemCursor mCursor;
     private List mListType;
-    private int mLastListChangePosition;
 
     public ListAdapter(Context context, List listType, OnStartDragListener dragStartListener) {
+        super();
         mContext = context;
         mListType = listType;
         mDragStartListener = dragStartListener;
-        setHasStableIds(true);
     }
 
     @Override
@@ -52,15 +50,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(final ListViewHolder holder, int position) {
-        if (mCursor == null || mCursor.isClosed()) {
-            return;
-        }
-        mCursor.moveToPosition(position);
-
-        holder.title.setText(mCursor.getTitle());
-        holder.quantity.setText(mCursor.getQuantity());
-        holder.description.setText(mCursor.getDescription());
+    public void onBindViewHolderCursor(final ListViewHolder holder, Cursor cursor) {
+        ItemCursor itemCursor = new ItemCursor(cursor);
+        holder.title.setText(itemCursor.getTitle());
+        holder.quantity.setText(itemCursor.getQuantity());
+        holder.description.setText(itemCursor.getDescription());
         holder.handle.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -91,75 +85,25 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public void onChangeList(List targetList, int position) {
-        mLastListChangePosition = position;
-        mCursor.moveToPosition(position);
+        ItemCursor itemCursor = new ItemCursor(getCursor());
+        itemCursor.moveToPosition(position);
 
         long timestamp = System.currentTimeMillis();
 
         ContentValues values = new ContentValues();
-        DatabaseUtils.cursorRowToContentValues(mCursor, values);
+        DatabaseUtils.cursorRowToContentValues(getCursor(), values);
         values.put(ItemColumns.LIST, targetList.ordinal());
         values.put(ItemColumns.TIME_MODIFIED, timestamp);
         if (targetList == List.BOUGHT) {
             values.put(ItemColumns.TIME_BOUGHT, timestamp);
         }
-        ItemSelection where = new ItemSelection().id(mCursor.getId());
+        ItemSelection where = new ItemSelection().id(itemCursor.getId());
 
         new ChangeListAsyncTask(mContext).execute(new Pair<>(values, where));
 //        mContext.getContentResolver().update(ItemColumns.CONTENT_URI, values, where.sel(), where.args());
     }
 
-//    @Override
-//    public void onItemDismiss(int position) {
-//        Log.i(TAG, "onItemDismiss");
-//        mDataset.remove(position);
-//        notifyItemRemoved(position);
-//    }
-
-    @Override
-    public int getItemCount() {
-        if ( null == mCursor ) return 0;
-        return mCursor.getCount();
-    }
-
-    public void swapCursor(ItemCursor newCursor) {
-        ItemCursor oldCursor = mCursor;
-        mCursor = newCursor;
-
-        if (oldCursor != null && newCursor != null) {
-            if (newCursor.getCount() < oldCursor.getCount()) {
-                notifyItemRemoved(mLastListChangePosition);
-            } else if (newCursor.getCount() > oldCursor.getCount()) {
-                notifyItemInserted(oldCursor.getCount());
-            }
-//            notifyItemRemoved(mLastListChangePosition);
-//            notifyItemRangeChanged(0, oldCursor.getCount());
-        } else {
-            notifyDataSetChanged();
-        }
-
-        if (oldCursor != null) {
-            oldCursor.close();
-        }
-    }
-
-    public ItemCursor getCursor() {
-        return mCursor;
-    }
-
     public List getListType() {
         return mListType;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        long id;
-        if (mCursor != null && !mCursor.isClosed()) {
-            mCursor.moveToPosition(position);
-            id = mCursor.getId();
-        } else {
-            id = RecyclerView.NO_ID;
-        }
-        return id;
     }
 }

@@ -117,7 +117,7 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(new ItemCursor(data));
+        mAdapter.changeCursor(new ItemCursor(data));
         Log.d(TAG, "swapCursor count = " + data.getCount());
     }
 
