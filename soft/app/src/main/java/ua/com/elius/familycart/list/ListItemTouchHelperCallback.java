@@ -49,8 +49,6 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
             case TO_BUY:
                 if (direction == ItemTouchHelper.END) {
                     mAdapter.onChangeList(BOUGHT, viewHolder.getAdapterPosition());
-                    Log.d(TAG, "getAdapterPosition = " + viewHolder.getAdapterPosition() + " "
-                            +  "getLayoutPosition = " + viewHolder.getLayoutPosition());
                 } else {
                     mAdapter.onChangeList(WONT_BUY, viewHolder.getAdapterPosition());
                 }

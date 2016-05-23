@@ -95,7 +95,6 @@ public abstract class RecyclerViewCursorAdapter<VH
             mRowIDColumn = -1;
             mDataValid = false;
             // notify the observers about the lack of a data set
-            // notifyDataSetInvalidated();
             notifyItemRangeRemoved(0, getItemCount());
         }
         return oldCursor;

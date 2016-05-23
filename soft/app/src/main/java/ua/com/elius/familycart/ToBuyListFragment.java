@@ -33,8 +33,6 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     private static final String TAG = "ToBuyListFragment";
 
-    public static final int RC_NEW_ITEM = 1;
-
     private RecyclerView mRecyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -87,19 +85,6 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
         return view;
     }
 
-    private String[][] getDummyDataset() {
-        String[][] dataset = new String[][]{
-                {"Milk", "1 bottle", "2.5% or 3% fat"},
-                {"Butter", "250 g", "That one in blue wrapper"},
-                {"Bread", "2x", ""},
-                {"Banana", "1.5 kg", "Don't take too large"},
-                {"Orange", "1 kg", ""},
-                {"Apples", "2 kg", "Take red and yellow"},
-        };
-
-        return dataset;
-    }
-
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
@@ -134,25 +119,6 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     public void newItem() {
         Intent intent = new Intent(getContext(), EditActivity.class);
-        startActivityForResult(intent, RC_NEW_ITEM);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_NEW_ITEM && resultCode == Activity.RESULT_OK) {
-//            mAdapter.notifyDataSetChanged();
-//            Log.d(TAG, "notifyDataSetChanged");
-//            nullCursor();
-//            getLoaderManager().destroyLoader(TO_BUY_LOADER);
-//            getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
-//            Log.d(TAG, "initLoader");
-//            getLoaderManager().restartLoader(TO_BUY_LOADER, null, this);
-//            Log.d(TAG, "restartLoader");
-//            mAdapter.notifyItemInserted(mAdapter.getItemCount());
-//            mAdapter.notifyItemInserted(mAdapter.getItemCount());
-
-        }
+        startActivity(intent);
     }
 }

@@ -62,14 +62,11 @@ public class EditActivity extends AppCompatActivity {
             item.putTimeCreated(timestamp);
             item.putTimeModified(timestamp);
 
-//            getContentResolver().insert(ItemColumns.CONTENT_URI, item.values());
             new InsertItemAsyncTask(this).execute(item.values());
 
             Log.i(TAG, "Save item: " + item.values().toString());
 
             sendBroadcast(new Intent(ACTION_WIDGET_UPDATE));
-
-            setResult(RESULT_OK);
         }
         finish();
     }
