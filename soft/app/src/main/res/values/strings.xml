@@ -11,4 +11,5 @@
 
     <string name="edit_done_save">Save</string>
     <string name="activity_label_edit_item">Edit item</string>
+    <string name="appwidget_description">Items left to buy</string>
 </resources>
