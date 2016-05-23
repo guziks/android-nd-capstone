@@ -49,6 +49,8 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
             case TO_BUY:
                 if (direction == ItemTouchHelper.END) {
                     mAdapter.onChangeList(BOUGHT, viewHolder.getAdapterPosition());
+                    Log.d(TAG, "getAdapterPosition = " + viewHolder.getAdapterPosition() + " "
+                            +  "getLayoutPosition = " + viewHolder.getLayoutPosition());
                 } else {
                     mAdapter.onChangeList(WONT_BUY, viewHolder.getAdapterPosition());
                 }
@@ -68,10 +70,10 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        super.clearView(recyclerView, viewHolder);
-
         ListViewHolder holder = (ListViewHolder) viewHolder;
         holder.setMode(ListViewHolder.MODE_DEFAULT);
+        getDefaultUIUtil().clearView(holder.front);
+        super.clearView(recyclerView, viewHolder);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import ua.com.elius.familycart.data.item.ItemColumns;
 import ua.com.elius.familycart.data.item.ItemContentValues;
 import ua.com.elius.familycart.data.item.List;
+import ua.com.elius.familycart.list.InsertItemAsyncTask;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -61,11 +62,14 @@ public class EditActivity extends AppCompatActivity {
             item.putTimeCreated(timestamp);
             item.putTimeModified(timestamp);
 
-            getContentResolver().insert(ItemColumns.CONTENT_URI, item.values());
+//            getContentResolver().insert(ItemColumns.CONTENT_URI, item.values());
+            new InsertItemAsyncTask(this).execute(item.values());
 
             Log.i(TAG, "Save item: " + item.values().toString());
 
             sendBroadcast(new Intent(ACTION_WIDGET_UPDATE));
+
+            setResult(RESULT_OK);
         }
         finish();
     }

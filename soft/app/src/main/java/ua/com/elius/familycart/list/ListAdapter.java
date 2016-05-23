@@ -8,6 +8,7 @@ import android.support.annotation.IntDef;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,17 +25,17 @@ import ua.com.elius.familycart.data.item.ItemSelection;
 import ua.com.elius.familycart.data.item.List;
 import ua.com.elius.familycart.data.person.PersonCursor;
 
-public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
+public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
         implements ListItemTouchHelperAdapter {
 
     private static final String TAG = "ListAdapter";
 
     private final OnStartDragListener mDragStartListener;
     private Context mContext;
-    private ItemCursor mCursor;
     private List mListType;
 
     public ListAdapter(Context context, List listType, OnStartDragListener dragStartListener) {
+        super();
         mContext = context;
         mListType = listType;
         mDragStartListener = dragStartListener;
@@ -49,12 +50,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(final ListViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
-
-        holder.title.setText(mCursor.getTitle());
-        holder.quantity.setText(mCursor.getQuantity());
-        holder.description.setText(mCursor.getDescription());
+    public void onBindViewHolderCursor(final ListViewHolder holder, Cursor cursor) {
+        ItemCursor itemCursor = new ItemCursor(cursor);
+        holder.title.setText(itemCursor.getTitle());
+        holder.quantity.setText(itemCursor.getQuantity());
+        holder.description.setText(itemCursor.getDescription());
         holder.handle.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -85,46 +85,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>
 
     @Override
     public void onChangeList(List targetList, int position) {
-        mCursor.moveToPosition(position);
+        setLastSwipePosition(position);
+        ItemCursor itemCursor = new ItemCursor(getCursor());
+        itemCursor.moveToPosition(position);
 
         long timestamp = System.currentTimeMillis();
-        
+
         ContentValues values = new ContentValues();
-        DatabaseUtils.cursorRowToContentValues(mCursor, values);
+        DatabaseUtils.cursorRowToContentValues(itemCursor, values);
         values.put(ItemColumns.LIST, targetList.ordinal());
         values.put(ItemColumns.TIME_MODIFIED, timestamp);
         if (targetList == List.BOUGHT) {
             values.put(ItemColumns.TIME_BOUGHT, timestamp);
         }
-        ItemSelection where = new ItemSelection().id(mCursor.getId());
-        mContext.getContentResolver().update(ItemColumns.CONTENT_URI, values, where.sel(), where.args());
+        ItemSelection where = new ItemSelection().id(itemCursor.getId());
 
-        notifyItemRemoved(position);
-//        Toast.makeText(mContext, "Notified that removed: " + position, Toast.LENGTH_SHORT).show();
-//        notifyItemChanged(position);
-//        notifyDataSetChanged();
-    }
-
-//    @Override
-//    public void onItemDismiss(int position) {
-//        Log.i(TAG, "onItemDismiss");
-//        mDataset.remove(position);
-//        notifyItemRemoved(position);
-//    }
-
-    @Override
-    public int getItemCount() {
-        if ( null == mCursor ) return 0;
-        return mCursor.getCount();
-    }
-
-    public void swapCursor(ItemCursor newCursor) {
-        mCursor = newCursor;
-        notifyDataSetChanged();
-    }
-
-    public ItemCursor getCursor() {
-        return mCursor;
+        new ChangeListAsyncTask(mContext).execute(new Pair<>(values, where));
+//        mContext.getContentResolver().update(ItemColumns.CONTENT_URI, values, where.sel(), where.args());
     }
 
     public List getListType() {

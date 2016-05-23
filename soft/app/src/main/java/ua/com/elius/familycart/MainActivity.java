@@ -178,9 +178,4 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.content_frame, switchToFragment)
                 .commit();
     }
-
-    public void newItem(View view) {
-        Intent intent = new Intent(this, EditActivity.class);
-        startActivity(intent);
-    }
 }
