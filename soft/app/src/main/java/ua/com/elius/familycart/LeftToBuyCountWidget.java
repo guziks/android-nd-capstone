@@ -25,7 +25,7 @@ public class LeftToBuyCountWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.left_to_buy_count_widget);
         views.setTextViewText(R.id.count_text_view, count);
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, LauncherActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.cart_image, pendingIntent);
 
