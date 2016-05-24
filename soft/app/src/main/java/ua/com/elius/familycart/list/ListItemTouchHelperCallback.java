@@ -8,6 +8,7 @@ import android.util.Log;
 import ua.com.elius.familycart.data.item.List;
 
 import static ua.com.elius.familycart.data.item.List.BOUGHT;
+import static ua.com.elius.familycart.data.item.List.DELETED;
 import static ua.com.elius.familycart.data.item.List.TO_BUY;
 import static ua.com.elius.familycart.data.item.List.WONT_BUY;
 
@@ -19,12 +20,18 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private @ListViewHolder.ItemMode int mPositiveSwipeMode;
     private @ListViewHolder.ItemMode int mNegativeSwipeMode;
 
-    public ListItemTouchHelperCallback(ListItemTouchHelperAdapter adapter,
-           @ListViewHolder.ItemMode int positiveSwipeMode,
-           @ListViewHolder.ItemMode int negativeSwipeMode) {
+    public ListItemTouchHelperCallback(ListItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
-        mPositiveSwipeMode = positiveSwipeMode;
-        mNegativeSwipeMode = negativeSwipeMode;
+        switch (mAdapter.getListType()) {
+            case TO_BUY:
+                mPositiveSwipeMode = ListViewHolder.MODE_BOUGHT;
+                mNegativeSwipeMode = ListViewHolder.MODE_WONT_BUY;
+                break;
+            case WONT_BUY:
+                mPositiveSwipeMode = ListViewHolder.MODE_TO_BUY;
+                mNegativeSwipeMode = ListViewHolder.MODE_DELETE;
+                break;
+        }
     }
 
     @Override
@@ -53,6 +60,13 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
                     mAdapter.onChangeList(WONT_BUY, viewHolder.getAdapterPosition());
                 }
                 break;
+            case WONT_BUY:
+                if (direction == ItemTouchHelper.END) {
+                    mAdapter.onChangeList(TO_BUY, viewHolder.getAdapterPosition());
+                } else {
+                    mAdapter.onChangeList(DELETED, viewHolder.getAdapterPosition());
+                }
+                break;
         }
     }
 
@@ -63,7 +77,13 @@ public class ListItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return true;
+        boolean isEnabled = false;
+        switch (mAdapter.getListType()) {
+            case TO_BUY: case WONT_BUY:
+                isEnabled = true;
+                break;
+        }
+        return isEnabled;
     }
 
     @Override

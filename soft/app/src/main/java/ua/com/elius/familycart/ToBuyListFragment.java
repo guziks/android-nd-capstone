@@ -68,7 +68,6 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
         View view = inflater.inflate(R.layout.fragment_to_buy_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.to_by_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -76,9 +75,7 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
         mAdapter = new ListAdapter(getContext(), List.TO_BUY, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter,
-                ListViewHolder.MODE_BOUGHT,
-                ListViewHolder.MODE_WONT_BUY);
+        ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter);
         mItemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
@@ -103,18 +100,11 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         mAdapter.changeCursor(new ItemCursor(data));
-        Log.d(TAG, "swapCursor count = " + data.getCount());
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        Log.d(TAG, "onLoaderReset");
-        nullCursor();
-    }
-
-    private void nullCursor() {
         mAdapter.swapCursor(null);
-        Log.d(TAG, "swapCursor(null)");
     }
 
     public void newItem() {
