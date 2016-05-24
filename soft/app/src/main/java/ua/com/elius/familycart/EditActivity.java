@@ -1,14 +1,12 @@
 package ua.com.elius.familycart;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import ua.com.elius.familycart.data.item.ItemColumns;
 import ua.com.elius.familycart.data.item.ItemContentValues;
 import ua.com.elius.familycart.data.item.List;
 import ua.com.elius.familycart.list.InsertItemAsyncTask;
@@ -18,7 +16,6 @@ public class EditActivity extends AppCompatActivity {
     private static final String TAG = "EditActivity";
 
     public static final String ACTION_EDIT = "ua.com.elius.familycart.action.EDIT";
-    public static final String ACTION_WIDGET_UPDATE = "ua.com.elius.familycart.action.APPWIDGET_UPDATE";
 
     EditText mTitle;
     EditText mQuantity;
@@ -65,8 +62,6 @@ public class EditActivity extends AppCompatActivity {
             new InsertItemAsyncTask(this).execute(item.values());
 
             Log.i(TAG, "Save item: " + item.values().toString());
-
-            sendBroadcast(new Intent(ACTION_WIDGET_UPDATE));
         }
         finish();
     }

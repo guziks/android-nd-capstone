@@ -2,11 +2,11 @@ package ua.com.elius.familycart.list;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Pair;
 
+import ua.com.elius.familycart.LeftToBuyCountWidget;
 import ua.com.elius.familycart.data.item.ItemColumns;
-import ua.com.elius.familycart.data.item.ItemSelection;
 
 public class InsertItemAsyncTask extends AsyncTask<ContentValues, Void, Void> {
 
@@ -21,6 +21,8 @@ public class InsertItemAsyncTask extends AsyncTask<ContentValues, Void, Void> {
         ContentValues values = params[0];
 
         mContext.getContentResolver().insert(ItemColumns.CONTENT_URI, values);
+
+        mContext.sendBroadcast(new Intent(LeftToBuyCountWidget.ACTION_WIDGET_UPDATE));
 
         return null;
     }

@@ -17,6 +17,8 @@ public class LeftToBuyCountWidget extends AppWidgetProvider {
 
     private static final String TAG = "LeftToBuyCountWidget";
 
+    public static final String ACTION_WIDGET_UPDATE = "ua.com.elius.familycart.action.APPWIDGET_UPDATE";
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String count) {
 
@@ -42,7 +44,7 @@ public class LeftToBuyCountWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (action.equals(EditActivity.ACTION_WIDGET_UPDATE)) {
+        if (action.equals(ACTION_WIDGET_UPDATE)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, LeftToBuyCountWidget.class));
             this.onUpdate(context, appWidgetManager, appWidgetIds);
