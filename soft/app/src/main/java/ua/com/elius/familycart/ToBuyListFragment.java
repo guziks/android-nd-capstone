@@ -46,14 +46,6 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newItem();
-            }
-        });
-
         getLoaderManager().initLoader(TO_BUY_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
@@ -66,6 +58,14 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_buy_list, container, false);
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newItem();
+            }
+        });
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.to_by_recycler_view);
 
