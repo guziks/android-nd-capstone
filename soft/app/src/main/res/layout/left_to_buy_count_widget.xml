@@ -12,7 +12,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_shopping_cart"
-        android:tint="@color/swipeToBuy"/>
+        android:tint="@color/swipeToBuy"
+        android:contentDescription="@string/description_to_buy_icon"/>
 
     <TextView
         android:id="@+id/count_text_view"

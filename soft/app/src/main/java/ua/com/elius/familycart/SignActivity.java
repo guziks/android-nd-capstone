@@ -144,7 +144,7 @@ public class SignActivity extends AppCompatActivity implements GoogleApiClient.O
         } else {
             Log.i(TAG, "Sign in unsuccessful. Result status code: "
                     + result.getStatus().getStatusCode());
-            Toast.makeText(this, "Sign in unsuccessful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.sign_in_unsuccessful, Toast.LENGTH_SHORT).show();
         }
     }
 

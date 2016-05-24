@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:text="@string/item_title"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <EditText
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Quantity"
+                android:text="@string/item_quantity"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <EditText
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Description"
+                android:text="@string/item_description"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <EditText
