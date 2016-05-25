@@ -1,5 +1,7 @@
 package ua.com.elius.familycart.list;
 
+import android.content.ContentUris;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
@@ -8,9 +10,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ua.com.elius.familycart.EditActivity;
 import ua.com.elius.familycart.R;
+import ua.com.elius.familycart.data.item.ItemColumns;
 
-public class ListViewHolder extends RecyclerView.ViewHolder {
+public class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    public static String EXTRA_TITLE = "intent.extra.TITLE";
+    public static String EXTRA_QUANTITY = "intent.extra.QUANTITY";
+    public static String EXTRA_DESCRIPTION = "intent.extra.DESCRIPTION";
 
     @IntDef({MODE_DEFAULT, MODE_BOUGHT, MODE_WONT_BUY, MODE_TO_BUY, MODE_DELETE})
     public @interface ItemMode {}
@@ -30,15 +38,21 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
     public ImageView delete;
     public FrameLayout front;
 
-    private static int COLOR_BOUGHT = Color.parseColor("#43A047");
-    private static int COLOR_WONT_BUY = Color.parseColor("#EF6C00");
-    private static int COLOR_TO_BUY = Color.parseColor("#0288D1");
-    private static int COLOR_DELETE = Color.parseColor("#EF5350");
+    private int COLOR_BOUGHT;
+    private int COLOR_WONT_BUY;
+    private int COLOR_TO_BUY;
+    private int COLOR_DELETE;
 
     private @ItemMode int mMode;
 
     public ListViewHolder(View v) {
         super(v);
+
+        COLOR_BOUGHT = v.getContext().getResources().getColor(R.color.swipeBought);
+        COLOR_WONT_BUY = v.getContext().getResources().getColor(R.color.swipeWontBuy);
+        COLOR_TO_BUY = v.getContext().getResources().getColor(R.color.swipeToBuy);
+        COLOR_DELETE = v.getContext().getResources().getColor(R.color.swipeDelete);
+
         title = (TextView) v.findViewById(R.id.item_title);
         quantity = (TextView) v.findViewById(R.id.item_quantity);
         description = (TextView) v.findViewById(R.id.item_description);
@@ -48,6 +62,20 @@ public class ListViewHolder extends RecyclerView.ViewHolder {
         toBuy = (ImageView) v.findViewById(R.id.bg_icon_to_buy);
         delete = (ImageView) v.findViewById(R.id.bg_icon_delete);
         front = (FrameLayout) v.findViewById(R.id.item_front);
+
+        v.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(v.getContext(),EditActivity.class);
+        intent.setAction(EditActivity.ACTION_EDIT);
+        intent.setData(ContentUris.withAppendedId(
+                ItemColumns.CONTENT_URI, getItemId()));
+        intent.putExtra(EXTRA_TITLE, title.getText());
+        intent.putExtra(EXTRA_QUANTITY, quantity.getText());
+        intent.putExtra(EXTRA_DESCRIPTION, description.getText());
+        v.getContext().startActivity(intent);
     }
 
     public void setMode(@ItemMode int mode) {

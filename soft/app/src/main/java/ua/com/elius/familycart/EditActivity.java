@@ -2,7 +2,6 @@ package ua.com.elius.familycart;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,6 +9,8 @@ import android.widget.EditText;
 import ua.com.elius.familycart.data.item.ItemContentValues;
 import ua.com.elius.familycart.data.item.List;
 import ua.com.elius.familycart.list.InsertItemAsyncTask;
+import ua.com.elius.familycart.list.ListViewHolder;
+import ua.com.elius.familycart.list.UpdateItemAsyncTask;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -17,9 +18,9 @@ public class EditActivity extends AppCompatActivity {
 
     public static final String ACTION_EDIT = "ua.com.elius.familycart.action.EDIT";
 
-    EditText mTitle;
-    EditText mQuantity;
-    EditText mDescription;
+    EditText mTitleView;
+    EditText mQuantityView;
+    EditText mDescriptionView;
     boolean mEdit;
 
     @Override
@@ -31,11 +32,17 @@ public class EditActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
         }
 
-        mTitle = (EditText) findViewById(R.id.title_edit_text);
-        mQuantity = (EditText) findViewById(R.id.quantity_edit_text);
-        mDescription = (EditText) findViewById(R.id.description_edit_text);
+        mTitleView = (EditText) findViewById(R.id.title_edit_text);
+        mQuantityView = (EditText) findViewById(R.id.quantity_edit_text);
+        mDescriptionView = (EditText) findViewById(R.id.description_edit_text);
 
         mEdit = ACTION_EDIT.equals(getIntent().getAction());
+
+        if (mEdit) {
+            mTitleView.setText(getIntent().getStringExtra(ListViewHolder.EXTRA_TITLE));
+            mQuantityView.setText(getIntent().getStringExtra(ListViewHolder.EXTRA_QUANTITY));
+            mDescriptionView.setText(getIntent().getStringExtra(ListViewHolder.EXTRA_DESCRIPTION));
+        }
     }
 
     @Override
@@ -45,23 +52,21 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void save(MenuItem menuItem) {
+        ItemContentValues item = new ItemContentValues();
+        long timestamp = System.currentTimeMillis();
+        item.putTitle(mTitleView.getText().toString());
+        item.putQuantity(mQuantityView.getText().toString());
+        item.putDescription(mDescriptionView.getText().toString());
+        item.putList(List.TO_BUY);
+        item.putCustomOrder(0); // TODO put highest value
         if (mEdit) {
-            // TODO edit
+            item.putTimeModified(timestamp);
+            new UpdateItemAsyncTask(this, item.values(), getIntent().getData()).execute();
         } else {
             // create new item
-            ItemContentValues item = new ItemContentValues();
-            item.putTitle(mTitle.getText().toString());
-            item.putQuantity(mQuantity.getText().toString());
-            item.putDescription(mDescription.getText().toString());
-            item.putList(List.TO_BUY);
-            item.putCustomOrder(0); // TODO put highest value
-            long timestamp = System.currentTimeMillis();
             item.putTimeCreated(timestamp);
             item.putTimeModified(timestamp);
-
             new InsertItemAsyncTask(this).execute(item.values());
-
-            Log.i(TAG, "Save item: " + item.values().toString());
         }
         finish();
     }

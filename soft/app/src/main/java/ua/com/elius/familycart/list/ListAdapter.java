@@ -4,26 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.support.annotation.IntDef;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 import ua.com.elius.familycart.R;
 import ua.com.elius.familycart.data.item.ItemColumns;
 import ua.com.elius.familycart.data.item.ItemCursor;
 import ua.com.elius.familycart.data.item.ItemSelection;
 import ua.com.elius.familycart.data.item.List;
-import ua.com.elius.familycart.data.person.PersonCursor;
 
 public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
         implements ListItemTouchHelperAdapter {
