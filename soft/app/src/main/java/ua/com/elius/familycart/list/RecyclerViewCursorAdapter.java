@@ -80,17 +80,7 @@ public abstract class RecyclerViewCursorAdapter<VH
             mRowIDColumn = newCursor.getColumnIndexOrThrow("_id");
             mDataValid = true;
             // notify the observers about the new cursor
-            if (oldCursor != null) {
-                if (newCursor.getCount() > oldCursor.getCount()) {
-                    notifyItemInserted(oldCursor.getCount());
-                } else if (newCursor.getCount() < oldCursor.getCount()) {
-                    notifyItemRemoved(mLastSwipePosition);
-                } else {
-                    notifyDataSetChanged();
-                }
-            } else {
-                notifyDataSetChanged();
-            }
+            notifyDataSetChanged();
         } else {
             mRowIDColumn = -1;
             mDataValid = false;
