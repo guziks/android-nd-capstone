@@ -2,12 +2,14 @@ package ua.com.elius.familycart;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import ua.com.elius.familycart.data.item.ItemContentValues;
 import ua.com.elius.familycart.data.item.List;
+import ua.com.elius.familycart.list.FetchMaxCustomOrderAsyncTask;
 import ua.com.elius.familycart.list.InsertItemAsyncTask;
 import ua.com.elius.familycart.list.ListViewHolder;
 import ua.com.elius.familycart.list.UpdateItemAsyncTask;
@@ -18,10 +20,11 @@ public class EditActivity extends AppCompatActivity {
 
     public static final String ACTION_EDIT = "ua.com.elius.familycart.action.EDIT";
 
-    EditText mTitleView;
-    EditText mQuantityView;
-    EditText mDescriptionView;
-    boolean mEdit;
+    private EditText mTitleView;
+    private EditText mQuantityView;
+    private EditText mDescriptionView;
+    private boolean mEdit;
+    private Bundle mInbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class EditActivity extends AppCompatActivity {
             mQuantityView.setText(getIntent().getStringExtra(ListViewHolder.EXTRA_QUANTITY));
             mDescriptionView.setText(getIntent().getStringExtra(ListViewHolder.EXTRA_DESCRIPTION));
         }
+
+        mInbox = new Bundle();
+        new FetchMaxCustomOrderAsyncTask(this, mInbox).execute();
     }
 
     @Override
@@ -52,18 +58,26 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void save(MenuItem menuItem) {
+        if (!mInbox.getBoolean(FetchMaxCustomOrderAsyncTask.VALUE_RECEIVED)) {
+            Log.i(TAG, "Custom order maximum values not received, abort saving");
+            return;
+        }
+
         ItemContentValues item = new ItemContentValues();
         long timestamp = System.currentTimeMillis();
+
         item.putTitle(mTitleView.getText().toString());
         item.putQuantity(mQuantityView.getText().toString());
         item.putDescription(mDescriptionView.getText().toString());
         item.putList(List.TO_BUY);
-        item.putCustomOrder(0); // TODO put highest value
+
         if (mEdit) {
             item.putTimeModified(timestamp);
             new UpdateItemAsyncTask(this, item.values(), getIntent().getData()).execute();
         } else {
             // create new item
+            int maxOrder = mInbox.getInt(FetchMaxCustomOrderAsyncTask.MAX_ORDER);
+            item.putCustomOrder(++maxOrder);
             item.putTimeCreated(timestamp);
             item.putTimeModified(timestamp);
             new InsertItemAsyncTask(this).execute(item.values());
