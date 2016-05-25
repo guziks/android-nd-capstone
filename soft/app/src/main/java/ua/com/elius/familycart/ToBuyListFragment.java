@@ -94,7 +94,7 @@ public class ToBuyListFragment extends Fragment implements OnStartDragListener,
                 ItemColumns.ALL_COLUMNS,
                 ItemColumns.LIST + " = ?",
                 new String[]{String.valueOf(List.TO_BUY.ordinal())},
-                null);
+                ItemColumns.CUSTOM_ORDER + " DESC");
     }
 
     @Override
