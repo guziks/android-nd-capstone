@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import ua.com.elius.familycart.data.item.ItemColumns;
 import ua.com.elius.familycart.data.item.ItemCursor;
 import ua.com.elius.familycart.data.item.ItemSelection;
+import ua.com.elius.familycart.data.item.List;
 
 public class FetchMaxCustomOrderAsyncTask extends AsyncTask<Void,Void,Void> {
 
@@ -17,26 +15,26 @@ public class FetchMaxCustomOrderAsyncTask extends AsyncTask<Void,Void,Void> {
     public static final String VALUE_RECEIVED = "value_received";
 
     private Context mContext;
+    private List mList;
     private Bundle mResultDestination;
 
-    public FetchMaxCustomOrderAsyncTask(Context context, Bundle resultDestination) {
-        this.mContext = context;
-        this.mResultDestination = resultDestination;
+    public FetchMaxCustomOrderAsyncTask(Context context, List list, Bundle resultDestination) {
+        mContext = context;
+        mList = list;
+        mResultDestination = resultDestination;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
 
-        ItemCursor cursor = new ItemSelection().query(mContext,
-                new String[]{ItemColumns.CUSTOM_ORDER});
+        ItemSelection where = new ItemSelection().list(mList).orderByCustomOrder(true);
+        ItemCursor cursor = where.query(mContext, new String[]{ItemColumns.CUSTOM_ORDER});
 
-        ArrayList<Integer> orderList = new ArrayList<>();
-
-        while (cursor.moveToNext()) {
-            orderList.add(cursor.getCustomOrder());
+        if (cursor != null && cursor.moveToFirst() && cursor.getCustomOrder() != null) {
+            mResultDestination.putInt(MAX_ORDER, cursor.getCustomOrder());
+        } else {
+            mResultDestination.putInt(MAX_ORDER, 0);
         }
-
-        mResultDestination.putInt(MAX_ORDER, Collections.max(orderList));
         mResultDestination.putBoolean(VALUE_RECEIVED, true);
 
         return null;

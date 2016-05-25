@@ -48,7 +48,7 @@ public class EditActivity extends AppCompatActivity {
         }
 
         mInbox = new Bundle();
-        new FetchMaxCustomOrderAsyncTask(this, mInbox).execute();
+        new FetchMaxCustomOrderAsyncTask(this, List.TO_BUY, mInbox).execute();
     }
 
     @Override
