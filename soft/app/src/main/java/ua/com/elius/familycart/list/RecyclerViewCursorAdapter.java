@@ -13,16 +13,11 @@ public abstract class RecyclerViewCursorAdapter<VH
     private boolean mDataValid;
     private int mRowIDColumn;
     private Cursor mCursor;
-    private int mLastSwipePosition = RecyclerView.NO_POSITION;
 
     public abstract void onBindViewHolderCursor(VH holder, Cursor cursor);
 
     public RecyclerViewCursorAdapter() {
         setHasStableIds(true);
-    }
-
-    public void setLastSwipePosition(int position) {
-        mLastSwipePosition = position;
     }
 
     @Override

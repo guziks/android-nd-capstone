@@ -77,7 +77,6 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
 
     @Override
     public void onChangeList(List targetList, int position) {
-        setLastSwipePosition(position);
         ItemCursor itemCursor = new ItemCursor(getCursor());
         itemCursor.moveToPosition(position);
 
