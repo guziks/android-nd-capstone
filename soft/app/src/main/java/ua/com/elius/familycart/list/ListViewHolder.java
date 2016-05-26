@@ -78,6 +78,10 @@ public class ListViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         v.getContext().startActivity(intent);
     }
 
+    public void removeOnClickListener() {
+        itemView.setOnClickListener(null);
+    }
+
     public void setMode(@ItemMode int mode) {
         if (mMode == mode) {
             return;

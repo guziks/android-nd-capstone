@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.support.v4.view.MotionEventCompat;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +24,7 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
     private final OnStartDragListener mDragStartListener;
     private Context mContext;
     private List mListType;
+    private boolean mEditable = true;
 
     public ListAdapter(Context context, List listType, OnStartDragListener dragStartListener) {
         super();
@@ -43,6 +43,9 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
 
     @Override
     public void onBindViewHolderCursor(final ListViewHolder holder, Cursor cursor) {
+        if (!mEditable) {
+            holder.removeOnClickListener();
+        }
         ItemCursor itemCursor = new ItemCursor(cursor);
         holder.title.setText(itemCursor.getTitle());
         holder.quantity.setText(itemCursor.getQuantity());
@@ -96,5 +99,9 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
 
     public List getListType() {
         return mListType;
+    }
+
+    public void setEditable(boolean editable) {
+        mEditable = editable;
     }
 }

@@ -58,6 +58,7 @@ public class BoughtListFragment extends Fragment implements OnStartDragListener,
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new ListAdapter(getContext(), List.BOUGHT, this);
+        mAdapter.setEditable(false);
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter);
