@@ -91,7 +91,7 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
         }
         ItemSelection where = new ItemSelection().id(itemCursor.getId());
 
-        new ChangeListAsyncTask(mContext).execute(new Pair<>(values, where));
+        new ChangeListAsyncTask(mContext, values, where, targetList).execute();
     }
 
     public List getListType() {
