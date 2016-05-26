@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.support.v4.view.MotionEventCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,19 +69,10 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-//        Log.i(TAG, "onItemMove");
-//        if (fromPosition < toPosition) {
-//            for (int i = fromPosition; i < toPosition; i++) {
-//                Collections.swap(mDataset, i, i + 1);
-//                Log.i(TAG, "swap");
-//            }
-//        } else {
-//            for (int i = fromPosition; i > toPosition; i--) {
-//                Collections.swap(mDataset, i, i - 1);
-//                Log.i(TAG, "swap");
-//            }
-//        }
-//        notifyItemMoved(fromPosition, toPosition);
+        Log.i(TAG, "onItemMove");
+        ItemMoveHelper moveHelper = new ItemMoveHelper(mContext, getCursor());
+        moveHelper.setNextPositions(fromPosition, toPosition);
+        moveHelper.move();
     }
 
     @Override
