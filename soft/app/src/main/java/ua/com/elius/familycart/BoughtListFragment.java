@@ -79,7 +79,7 @@ public class BoughtListFragment extends Fragment implements OnStartDragListener,
                 ItemColumns.ALL_COLUMNS,
                 ItemColumns.LIST + " = ?",
                 new String[]{String.valueOf(List.BOUGHT.ordinal())},
-                null);
+                ItemColumns.TIME_BOUGHT + " DESC");
     }
 
     @Override
