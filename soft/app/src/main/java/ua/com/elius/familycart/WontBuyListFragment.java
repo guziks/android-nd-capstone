@@ -58,6 +58,7 @@ public class WontBuyListFragment extends Fragment implements OnStartDragListener
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new ListAdapter(getContext(), List.WONT_BUY, this);
+        mAdapter.setSortable(false);
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback itemTouchHelperCallback = new ListItemTouchHelperCallback(mAdapter);

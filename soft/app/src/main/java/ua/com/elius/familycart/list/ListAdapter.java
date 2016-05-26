@@ -25,6 +25,7 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
     private Context mContext;
     private List mListType;
     private boolean mEditable = true;
+    private boolean mSortable = true;
 
     public ListAdapter(Context context, List listType, OnStartDragListener dragStartListener) {
         super();
@@ -50,15 +51,19 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
         holder.title.setText(itemCursor.getTitle());
         holder.quantity.setText(itemCursor.getQuantity());
         holder.description.setText(itemCursor.getDescription());
-        holder.handle.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
+        if (mSortable) {
+            holder.handle.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        } else {
+            holder.handle.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -103,5 +108,9 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
 
     public void setEditable(boolean editable) {
         mEditable = editable;
+    }
+
+    public void setSortable(boolean sortable) {
+        mSortable = sortable;
     }
 }
