@@ -34,10 +34,6 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.com.elius.familycart.MainActivity;
-import ua.com.elius.familycart.R;
-import ua.com.elius.familycart.list.GeofenceErrorMessages;
-
 /**
  * Listener for geofence transition changes.
  *

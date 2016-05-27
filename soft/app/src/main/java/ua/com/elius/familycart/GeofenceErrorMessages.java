@@ -1,4 +1,4 @@
-package ua.com.elius.familycart.list;
+package ua.com.elius.familycart;
 
 /**
  * Copyright 2014 Google Inc. All Rights Reserved.
