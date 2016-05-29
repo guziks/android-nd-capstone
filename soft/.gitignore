@@ -37,7 +37,7 @@ captures/
 *.iml
 
 # Keystore files
-*.jks
+#*.jks
 
 ### JetBrains
 # Folder-based project format:
