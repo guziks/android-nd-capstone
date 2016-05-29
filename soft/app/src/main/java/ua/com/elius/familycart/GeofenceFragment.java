@@ -30,8 +30,8 @@ public class GeofenceFragment extends Fragment implements
 
     private static final int RC_LOCATION_PERMISSIONS = 1;
     private static final float GEOFENCE_RADIUS = 100f; // meters
-//    private static final int LOITERING_DELAY = 300000; // 5 minutes
-    private static final int LOITERING_DELAY = 10000; // 10 seconds
+    private static final int LOITERING_DELAY = 300000; // 5 minutes
+//    private static final int LOITERING_DELAY = 10000; // 10 seconds
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -157,7 +157,7 @@ public class GeofenceFragment extends Fragment implements
         // trigger right away for testing purposes
 //        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
         // do not trigger right away
-//        builder.setInitialTrigger(0);
+        builder.setInitialTrigger(0);
 
         // Add the geofences to be monitored by geofencing service.
         builder.addGeofences(mGeofenceList);

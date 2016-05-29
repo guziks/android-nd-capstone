@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
@@ -58,8 +57,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
                     triggeringGeofences
             );
 
-            // Send notification and log the transition details.
-            sendNotification(geofenceTransitionDetails);
+            if (Util.getLeftToBuyItemsCount(this) > 0) {
+                sendNotification();
+            }
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
@@ -84,7 +84,14 @@ public class GeofenceTransitionsIntentService extends IntentService {
         return geofenceTransitionString + ": " + triggeringGeofencesIdsString;
     }
 
-    private void sendNotification(String notificationDetails) {
+    private String getNotificationTitle() {
+        int leftToBuy = Util.getLeftToBuyItemsCount(getBaseContext());
+
+        return getResources().getQuantityString(
+                R.plurals.notification_left_to_buy_items_count, leftToBuy, leftToBuy);
+    }
+
+    private void sendNotification() {
         // Create an explicit content Intent that starts the main Activity.
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
 
@@ -109,7 +116,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
                         R.drawable.ic_shopping_cart_white))
                 .setColor(getResources().getColor(R.color.swipeToBuy))
-                .setContentTitle(notificationDetails)
+                .setContentTitle(getNotificationTitle())
                 .setContentText(getString(R.string.geofence_transition_notification_text))
                 .setContentIntent(notificationPendingIntent);
 
@@ -130,6 +137,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 return getString(R.string.geofence_transition_entered);
             case Geofence.GEOFENCE_TRANSITION_EXIT:
                 return getString(R.string.geofence_transition_exited);
+            case Geofence.GEOFENCE_TRANSITION_DWELL:
+                return getString(R.string.geofence_transition_dwell);
             default:
                 return getString(R.string.unknown_geofence_transition);
         }
