@@ -1,12 +1,13 @@
 package ua.com.elius.familycart;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -16,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,28 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MainActivity";
+    private static final String FRAGMENT_TAG_GEOFENCE = "geofence";
+
+    private Fragment mGeofenceFragment;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // geofence of place where user makes list empty
+            if (intent.getAction().equals(LeftToBuyCountWidget.ACTION_WIDGET_UPDATE) &&
+                    Util.getLeftToBuyItemsCount(context) == 0) {
+                addGeofenceFragment();
+                Log.d(TAG, "addGeofenceFragment");
+            }
+        }
+    };
+    private IntentFilter mFilter = new IntentFilter(LeftToBuyCountWidget.ACTION_WIDGET_UPDATE);
+
+
+    public MainActivity() {
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +60,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -61,6 +76,20 @@ public class MainActivity extends AppCompatActivity
             switchFragment(ToBuyListFragment.newInstance());
             getSupportActionBar().setTitle("To buy");
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
+        removeGeofenceFragment();
     }
 
     private void navHeaderInit(final NavigationView navigationView) {
@@ -176,6 +205,22 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, switchToFragment)
+                .commit();
+    }
+
+    private void addGeofenceFragment() {
+        mGeofenceFragment = new GeofenceFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(mGeofenceFragment, FRAGMENT_TAG_GEOFENCE)
+                .commit();
+    }
+
+    private void removeGeofenceFragment() {
+        mGeofenceFragment = new GeofenceFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .remove(mGeofenceFragment)
                 .commit();
     }
 }
