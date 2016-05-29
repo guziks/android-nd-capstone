@@ -28,29 +28,23 @@ import android.widget.ToggleButton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
-import ua.com.elius.familycart.data.item.ItemCursor;
-import ua.com.elius.familycart.data.item.ItemSelection;
-import ua.com.elius.familycart.data.item.List;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private static final String FRAGMENT_TAG_GEOFENCE = "geofence";
 
+    private Fragment mGeofenceFragment;
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ItemSelection where = new ItemSelection();
-            where.list(List.TO_BUY);
-            ItemCursor cursor = where.query(getContentResolver());
-
-            if (cursor.getCount() > 0) {
-                Log.d(TAG, "No need to create geofence");
-                return;
+            // geofence of place where user makes list empty
+            if (intent.getAction().equals(LeftToBuyCountWidget.ACTION_WIDGET_UPDATE) &&
+                    Util.getLeftToBuyItemsCount(context) == 0) {
+                addGeofenceFragment();
+                Log.d(TAG, "addGeofenceFragment");
             }
-
-            addGeofenceFragment();
         }
     };
     private IntentFilter mFilter = new IntentFilter(LeftToBuyCountWidget.ACTION_WIDGET_UPDATE);
@@ -95,6 +89,7 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
+        removeGeofenceFragment();
     }
 
     private void navHeaderInit(final NavigationView navigationView) {
@@ -214,9 +209,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addGeofenceFragment() {
+        mGeofenceFragment = new GeofenceFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(new GeofenceFragment(), FRAGMENT_TAG_GEOFENCE)
+                .add(mGeofenceFragment, FRAGMENT_TAG_GEOFENCE)
+                .commit();
+    }
+
+    private void removeGeofenceFragment() {
+        mGeofenceFragment = new GeofenceFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .remove(mGeofenceFragment)
                 .commit();
     }
 }

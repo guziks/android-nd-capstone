@@ -31,7 +31,6 @@ public class GeofenceFragment extends Fragment implements
     private static final int RC_LOCATION_PERMISSIONS = 1;
     private static final float GEOFENCE_RADIUS = 100f; // meters
     private static final int LOITERING_DELAY = 300000; // 5 minutes
-//    private static final int LOITERING_DELAY = 10000; // 10 seconds
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -94,10 +93,6 @@ public class GeofenceFragment extends Fragment implements
         Log.d(TAG, "Actually getLocation");
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
-//        if (mLastLocation != null) {
-//            Toast.makeText(getContext(), "Lat: " + String.valueOf(mLastLocation.getLatitude()), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(getContext(), "Long: " + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
-//        }
     }
 
     @Override
@@ -137,7 +132,7 @@ public class GeofenceFragment extends Fragment implements
         mGeofence = new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
-                .setRequestId("home")
+                .setRequestId("latest_shopping_place")
 
                 .setCircularRegion(
                         mLastLocation.getLatitude(),
