@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/contact_photo"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_margin="16dp"
+        android:layout_width="@dimen/contact_photo_width"
+        android:layout_height="@dimen/contact_photo_height"
+        android:layout_margin="@dimen/contact_margin"
         android:contentDescription="@string/description_contact_image"
         android:src="@android:drawable/sym_def_app_icon"/>
 
@@ -27,6 +27,6 @@
         android:id="@+id/contact_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"/>
+        android:layout_margin="@dimen/contact_margin"/>
 
 </LinearLayout>

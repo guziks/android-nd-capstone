@@ -22,6 +22,7 @@
     <string name="description_contact_image">Contact image</string>
     <string name="description_to_buy_icon">To buy icon</string>
     <string name="description_your_photo">Your photo</string>
+    <string name="description_add_new_item">Add new item</string>
 
     <!-- Error strings -->
     <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>

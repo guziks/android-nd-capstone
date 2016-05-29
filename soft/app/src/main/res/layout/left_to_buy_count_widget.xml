@@ -7,13 +7,13 @@
 
     <ImageView
         android:id="@+id/cart_image"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="@dimen/widget_width"
+        android:layout_height="@dimen/widget_height"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/description_to_buy_icon"
         android:src="@drawable/ic_shopping_cart"
-        android:tint="@color/swipeToBuy"
-        android:contentDescription="@string/description_to_buy_icon"/>
+        android:tint="@color/swipeToBuy"/>
 
     <TextView
         android:id="@+id/count_text_view"
@@ -21,11 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
         android:contentDescription="@string/appwidget_description"
-        android:paddingBottom="18dp"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
+        android:paddingBottom="@dimen/widget_count_shift"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/widget_text_size"
         android:textStyle="bold|italic"
         tools:text="#"/>
 

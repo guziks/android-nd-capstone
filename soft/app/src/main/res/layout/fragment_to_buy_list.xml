@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/description_add_new_item"
         android:src="@drawable/ic_add"
         android:tint="@android:color/white"/>
 

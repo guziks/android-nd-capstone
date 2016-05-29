@@ -7,5 +7,18 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="contact_photo_width">64dp</dimen>
+    <dimen name="contact_photo_height">64dp</dimen>
+    <dimen name="contact_margin">16dp</dimen>
+
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_height">64dp</dimen>
+    <dimen name="widget_width">64dp</dimen>
+    <dimen name="widget_count_shift">18dp</dimen>
+    <dimen name="widget_text_size">24sp</dimen>
+
+    <dimen name="swipe_icon_size">32dp</dimen>
+    <dimen name="swipe_icon_margin">16dp</dimen>
+    <dimen name="item_padding">16dp</dimen>
+    <dimen name="item_drag_handle_size">24dp</dimen>
 </resources>

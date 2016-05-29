@@ -8,49 +8,49 @@
 
     <ImageView
         android:id="@+id/bg_icon_bought"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/swipe_icon_size"
+        android:layout_height="@dimen/swipe_icon_size"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="@dimen/swipe_icon_margin"
+        android:layout_marginStart="@dimen/swipe_icon_margin"
         android:src="@drawable/ic_done"
         android:tint="@android:color/white"/>
 
     <ImageView
         android:id="@+id/bg_icon_wont_buy"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/swipe_icon_size"
+        android:layout_height="@dimen/swipe_icon_size"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="@dimen/swipe_icon_margin"
+        android:layout_marginRight="@dimen/swipe_icon_margin"
         android:src="@drawable/ic_schedule"
         android:tint="@android:color/white"/>
 
     <ImageView
         android:id="@+id/bg_icon_to_buy"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/swipe_icon_size"
+        android:layout_height="@dimen/swipe_icon_size"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="@dimen/swipe_icon_margin"
+        android:layout_marginStart="@dimen/swipe_icon_margin"
         android:src="@drawable/ic_shopping_cart"
         android:tint="@android:color/white"/>
 
     <ImageView
         android:id="@+id/bg_icon_delete"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/swipe_icon_size"
+        android:layout_height="@dimen/swipe_icon_size"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="@dimen/swipe_icon_margin"
+        android:layout_marginRight="@dimen/swipe_icon_margin"
         android:src="@drawable/ic_delete"
         android:tint="@android:color/white"/>
 
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:padding="@dimen/item_padding">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -102,8 +102,8 @@
 
                 <ImageView
                     android:id="@+id/drag_handle"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/item_drag_handle_size"
+                    android:layout_height="@dimen/item_drag_handle_size"
                     android:src="@drawable/ic_reorder"/>
             </LinearLayout>
 
