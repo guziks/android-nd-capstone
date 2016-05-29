@@ -70,9 +70,41 @@ public class ListAdapter extends RecyclerViewCursorAdapter<ListViewHolder>
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
         Log.i(TAG, "onItemMove");
-        ItemMoveHelper moveHelper = new ItemMoveHelper(mContext, getCursor());
-        moveHelper.setNextPositions(fromPosition, toPosition);
-        moveHelper.move();
+        if (Math.abs(fromPosition - toPosition) > 1) {
+            return;
+        }
+        swapItems(fromPosition, toPosition);
+    }
+
+    private void swapItems(int fromPosition, int toPosition) {
+        long timestamp = System.currentTimeMillis();
+
+        ItemCursor itemCursor = new ItemCursor(getCursor());
+
+        itemCursor.moveToPosition(fromPosition);
+        ContentValues fromValues = new ContentValues();
+        DatabaseUtils.cursorRowToContentValues(itemCursor, fromValues);
+        Integer fromOrder = fromValues.getAsInteger(ItemColumns.CUSTOM_ORDER);
+        ItemSelection fromWhere = new ItemSelection().id(itemCursor.getId());
+
+        itemCursor.moveToPosition(toPosition);
+        ContentValues toValues = new ContentValues();
+        DatabaseUtils.cursorRowToContentValues(itemCursor, toValues);
+        Integer toOrder = toValues.getAsInteger(ItemColumns.CUSTOM_ORDER);
+        ItemSelection toWhere = new ItemSelection().id(itemCursor.getId());
+
+        // update modified timestamp. TODO decide is it required
+        fromValues.put(ItemColumns.TIME_MODIFIED, timestamp);
+        toValues.put(ItemColumns.TIME_MODIFIED, timestamp);
+
+        // swap orders
+        fromValues.put(ItemColumns.CUSTOM_ORDER, toOrder);
+        toValues.put(ItemColumns.CUSTOM_ORDER, fromOrder);
+
+        mContext.getContentResolver().update(ItemColumns.CONTENT_URI,
+                fromValues, fromWhere.sel(), fromWhere.args());
+        mContext.getContentResolver().update(ItemColumns.CONTENT_URI,
+                toValues, toWhere.sel(), toWhere.args());
     }
 
     @Override
