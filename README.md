@@ -81,7 +81,7 @@ Shopping list with notifications shared between family members
 - [x] add items to list top instead of bottom
 - [x] set and use custom order
 - [x] change custom order while swiping (independent order for all lists)
-- [ ] make reorder handles work not only for adjacent items
+- [x] make reorder handles work
 - [x] show reorder handles only in To Buy list
 - [ ]
 - [x] create geofances
@@ -91,4 +91,4 @@ Shopping list with notifications shared between family members
 - [ ] add PlacesFragment to show and add places to notify
 - [ ]
 - [ ] tweak item and family layouts, maybe remove CardView, fill screen width on small screens
-- [ ] extract dimensions
+- [x] extract dimensions
