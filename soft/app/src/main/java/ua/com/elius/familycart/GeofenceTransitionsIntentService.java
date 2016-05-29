@@ -1,19 +1,3 @@
-/**
- * Copyright 2014 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package ua.com.elius.familycart;
 
 import android.app.IntentService;
@@ -34,23 +18,11 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Listener for geofence transition changes.
- *
- * Receives geofence transition events from Location Services in the form of an Intent containing
- * the transition type and geofence id(s) that triggered the transition. Creates a notification
- * as the output.
- */
 public class GeofenceTransitionsIntentService extends IntentService {
 
     protected static final String TAG = "GeofenceTransitionsIS";
 
-    /**
-     * This constructor is required, and calls the super IntentService(String)
-     * constructor with the name for a worker thread.
-     */
     public GeofenceTransitionsIntentService() {
-        // Use the TAG to name the worker thread.
         super(TAG);
     }
 
@@ -59,11 +31,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
         super.onCreate();
     }
 
-    /**
-     * Handles incoming intents.
-     * @param intent sent by Location Services. This Intent is provided to Location
-     *               Services (inside a PendingIntent) when addGeofences() is called.
-     */
     @Override
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
@@ -79,7 +46,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+                geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL) {
 
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
@@ -100,14 +67,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
     }
 
-    /**
-     * Gets transition details and returns them as a formatted string.
-     *
-     * @param context               The app context.
-     * @param geofenceTransition    The ID of the geofence transition.
-     * @param triggeringGeofences   The geofence(s) triggered.
-     * @return                      The transition details formatted as String.
-     */
     private String getGeofenceTransitionDetails(
             Context context,
             int geofenceTransition,
@@ -125,10 +84,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
         return geofenceTransitionString + ": " + triggeringGeofencesIdsString;
     }
 
-    /**
-     * Posts a notification in the notification bar when a transition is detected.
-     * If the user clicks the notification, control goes to the MainActivity.
-     */
     private void sendNotification(String notificationDetails) {
         // Create an explicit content Intent that starts the main Activity.
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -150,12 +105,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         // Define the notification settings.
-        builder.setSmallIcon(R.drawable.ic_shopping_cart)
-                // In a real app, you may want to use a library like Volley
-                // to decode the Bitmap.
+        builder.setSmallIcon(R.drawable.ic_shopping_cart_white)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                        R.drawable.ic_shopping_cart))
-                .setColor(Color.RED)
+                        R.drawable.ic_shopping_cart_white))
+                .setColor(getResources().getColor(R.color.swipeToBuy))
                 .setContentTitle(notificationDetails)
                 .setContentText(getString(R.string.geofence_transition_notification_text))
                 .setContentIntent(notificationPendingIntent);
@@ -171,12 +124,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
         mNotificationManager.notify(0, builder.build());
     }
 
-    /**
-     * Maps geofence transition types to their human-readable equivalents.
-     *
-     * @param transitionType    A transition type constant defined in Geofence
-     * @return                  A String indicating the type of transition
-     */
     private String getTransitionString(int transitionType) {
         switch (transitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:

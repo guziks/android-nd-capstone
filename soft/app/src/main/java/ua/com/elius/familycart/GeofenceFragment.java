@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -30,12 +29,15 @@ public class GeofenceFragment extends Fragment implements
     private static final String TAG = "GeofenceFragment";
 
     private static final int RC_LOCATION_PERMISSIONS = 1;
+    private static final float GEOFENCE_RADIUS = 100f; // meters
+//    private static final int LOITERING_DELAY = 300000; // 5 minutes
+    private static final int LOITERING_DELAY = 10000; // 10 seconds
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private ArrayList<Geofence> mGeofenceList;
-    private boolean mGeofencesAdded;
     private PendingIntent mGeofencePendingIntent;
+    private Geofence mGeofence;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +70,9 @@ public class GeofenceFragment extends Fragment implements
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
         getLocation();
+        if (mLastLocation == null) {
+            return;
+        }
         createGeofance();
         addGeofances();
     }
@@ -89,10 +94,10 @@ public class GeofenceFragment extends Fragment implements
         Log.d(TAG, "Actually getLocation");
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
-        if (mLastLocation != null) {
-            Toast.makeText(getContext(), "Lat: " + String.valueOf(mLastLocation.getLatitude()), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getContext(), "Long: " + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
-        }
+//        if (mLastLocation != null) {
+//            Toast.makeText(getContext(), "Lat: " + String.valueOf(mLastLocation.getLatitude()), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "Long: " + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
@@ -129,7 +134,7 @@ public class GeofenceFragment extends Fragment implements
         if (mGeofenceList == null) {
             mGeofenceList = new ArrayList<>();
         }
-        mGeofenceList.add(new Geofence.Builder()
+        mGeofence = new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
                 .setRequestId("home")
@@ -137,20 +142,22 @@ public class GeofenceFragment extends Fragment implements
                 .setCircularRegion(
                         mLastLocation.getLatitude(),
                         mLastLocation.getLongitude(),
-                        100
+                        GEOFENCE_RADIUS
                 )
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-                .build());
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL)
+                .setLoiteringDelay(LOITERING_DELAY)
+                .build();
+        mGeofenceList.add(mGeofence);
     }
 
     private GeofencingRequest getGeofencingRequest() {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
 
-        // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
-        // GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
-        // is already inside that geofence.
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        // trigger right away for testing purposes
+//        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        // do not trigger right away
+//        builder.setInitialTrigger(0);
 
         // Add the geofences to be monitored by geofencing service.
         builder.addGeofences(mGeofenceList);
@@ -167,7 +174,8 @@ public class GeofenceFragment extends Fragment implements
         Intent intent = new Intent(getContext(), GeofenceTransitionsIntentService.class);
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
         // addGeofences() and removeGeofences().
-        return PendingIntent.getService(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mGeofencePendingIntent = PendingIntent.getService(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return mGeofencePendingIntent;
     }
 
     private void addGeofances() {

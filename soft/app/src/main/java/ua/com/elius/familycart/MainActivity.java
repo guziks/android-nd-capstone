@@ -1,6 +1,9 @@
 package ua.com.elius.familycart;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,11 +28,33 @@ import android.widget.ToggleButton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
+import ua.com.elius.familycart.data.item.ItemCursor;
+import ua.com.elius.familycart.data.item.ItemSelection;
+import ua.com.elius.familycart.data.item.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private static final String FRAGMENT_TAG_GEOFENCE = "geofence";
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ItemSelection where = new ItemSelection();
+            where.list(List.TO_BUY);
+            ItemCursor cursor = where.query(getContentResolver());
+
+            if (cursor.getCount() > 0) {
+                Log.d(TAG, "No need to create geofence");
+                return;
+            }
+
+            addGeofenceFragment();
+        }
+    };
+    private IntentFilter mFilter = new IntentFilter(LeftToBuyCountWidget.ACTION_WIDGET_UPDATE);
+
 
     public MainActivity() {
     }
@@ -40,15 +66,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,7 +83,18 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle("To buy");
         }
 
-        addGeofenceFragment();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
     }
 
     private void navHeaderInit(final NavigationView navigationView) {
